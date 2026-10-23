@@ -66,4 +66,12 @@ function addBookmark(ayah){let a=getBookmarks();if(!a.some(x=>x.number===ayah.nu
 function renderBookmarks(){let a=getBookmarks();$('bookmarkList').innerHTML='';if(!a.length){$('bookmarkList').innerHTML='<p class="note">No bookmarks yet. Open Qur’an and tap “Bookmark this ayah” below any verse.</p>';return}a.forEach((x,i)=>{let card=document.createElement('div');card.className='verse';let h=document.createElement('div');h.className='vhead';h.textContent=x.surahName+' • Ayah '+x.numberInSurah;let ar=document.createElement('div');ar.className='arabic';ar.dir='rtl';ar.lang='ar';ar.textContent=x.text;let play=document.createElement('button');play.textContent='Open this Surah in Qur’an';play.onclick=()=>{showPage('quran');$('browse').value='surah';fillOptions();$('item').value=x.surahNumber;loadPassage()};let del=document.createElement('button');del.textContent='Remove bookmark';del.style.marginTop='7px';del.onclick=()=>{let b=getBookmarks();b=b.filter(y=>y.number!==x.number);localStorage.setItem('noorBookmarks',JSON.stringify(b));renderBookmarks()};card.append(h,ar,play,del);$('bookmarkList').append(card)})}
 function askChatGPT(){const q=$('aiQuestion').value.trim()||'Help me study the Qur’an and use the NOOR app.';window.open('https://chatgpt.com/?q='+encodeURIComponent(q),'_blank','noopener')}
 </script>
-</body></html>
+<script>
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker
+      .register('./service-worker.js')
+      .catch(error => console.error('Service Worker error:', error));
+  });
+}
+</script></body></html>
