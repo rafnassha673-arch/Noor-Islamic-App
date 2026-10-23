@@ -1,0 +1,13 @@
+
+{
+  "id": "./",
+  "name": "NOOR Islamic App",
+  "short_name": "NOOR",
+  "description": "Your Islamic companion",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#0b1f17",
+  "theme_color": "#0b1f17",
+  "icons": []
+}
