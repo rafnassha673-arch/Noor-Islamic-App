@@ -1,26 +1,48 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1f17">
 <title>NOOR — Qur’an Reading</title>
 <style>
+* { box-sizing: border-box; }
 body {
   margin: 0;
-  padding: 18px;
+  padding: 16px;
   background: #080808;
-  color: #f2c45b;
-  font-family: sans-serif;
+  color: #edbd50;
+  font-family: Arial, sans-serif;
 }
 h1 { text-align: center; }
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+}
 select, button {
-  padding: 12px;
-  margin: 5px 2px;
-  border-radius: 8px;
-  border: 1px solid #c49b3b;
+  padding: 11px;
+  border: 1px solid #a98736;
+  border-radius: 9px;
   background: #151515;
   color: #f2c45b;
   font-size: 16px;
+}
+select { max-width: 100%; }
+button:disabled, select:disabled { opacity: .6; }
+#status {
+  color: #d2c9b8;
+  text-align: center;
+  margin: 18px 0;
+  line-height: 1.7;
+}
+#surahTitle {
+  text-align: center;
+  color: #f2c45b;
+  line-height: 1.8;
+  margin-top: 24px;
 }
 #quran {
   color: #fff4d6;
@@ -29,68 +51,197 @@ select, button {
   line-height: 2.1;
   text-align: right;
   direction: rtl;
-  margin-top: 24px;
+  margin-top: 22px;
 }
-.ayah { margin-bottom: 18px; }
+.ayah {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #302719;
+}
+.ayahNo {
+  color: #edbd50;
+  font-size: .75em;
+  white-space: nowrap;
+}
 </style>
 </head>
 <body>
+
 <h1>📖 Qur’an Reading</h1>
 
-<select id="surah">
-  <option value="1">1. Al-Fatihah</option>
-  <option value="2">2. Al-Baqarah</option>
-  <option value="3">3. Aal-Imran</option>
-  <option value="18">18. Al-Kahf</option>
-  <option value="36">36. Ya-Sin</option>
-  <option value="55">55. Ar-Rahman</option>
-  <option value="67">67. Al-Mulk</option>
-  <option value="112">112. Al-Ikhlas</option>
-</select>
+<div class="controls">
+  <select id="surah" aria-label="Choose Surah" disabled>
+    <option>സൂറത്തുകൾ ലഭിക്കുന്നു...</option>
+  </select>
+  <button id="smaller" type="button">A−</button>
+  <button id="larger" type="button">A+</button>
+</div>
 
-<button onclick="changeSize(2)">A+</button>
-<button onclick="changeSize(-2)">A−</button>
-
-<div id="quran">ആയത്തുകൾ ലഭിക്കാൻ Internet ആവശ്യമാണ്.</div>
+<h2 id="surahTitle"></h2>
+<div id="status" role="status" aria-live="polite">
+  ഖുർആൻ ഡാറ്റ ലഭിക്കുന്നു...
+</div>
+<div id="quran"></div>
 
 <script>
-let fontSize = 28;
+'use strict';
 
-function changeSize(amount) {
-  fontSize = Math.max(18, Math.min(48, fontSize + amount));
-  document.getElementById("quran").style.fontSize =
-    fontSize + "px";
+const picker = document.getElementById('surah');
+const title = document.getElementById('surahTitle');
+const statusBox = document.getElementById('status');
+const area = document.getElementById('quran');
+
+let fontSize = 28;
+let surahList = [];
+let requestNumber = 0;
+
+document.getElementById('smaller').addEventListener('click', () => {
+  fontSize = Math.max(18, fontSize - 2);
+  area.style.fontSize = fontSize + 'px';
+});
+
+document.getElementById('larger').addEventListener('click', () => {
+  fontSize = Math.min(48, fontSize + 2);
+  area.style.fontSize = fontSize + 'px';
+});
+
+async function getJson(url) {
+  const response = await fetch(url, {
+    cache: 'no-cache'
+  });
+  if (!response.ok) {
+    throw new Error('Network response ' + response.status);
+  }
+  const json = await response.json();
+  if (json.code !== 200 || !json.data) {
+    throw new Error('Invalid Quran data response');
+  }
+  return json.data;
 }
 
-async function loadSurah() {
-  const number = document.getElementById("surah").value;
-  const area = document.getElementById("quran");
-  area.textContent = "Loading…";
+async function loadSurahList() {
+  picker.disabled = true;
+  statusBox.textContent = '114 സൂറത്തുകളുടെ പട്ടിക പരിശോധിക്കുന്നു...';
 
   try {
-    const response = await fetch(
-      "https://api.alquran.cloud/v1/surah/" + number + "/quran-uthmani"
+    const data = await getJson(
+      'https://api.alquran.cloud/v1/surah'
     );
-    if (!response.ok) throw new Error("Load failed");
 
-    const result = await response.json();
-    if (result.code !== 200) throw new Error("Invalid data");
+    if (!Array.isArray(data) || data.length !== 114) {
+      throw new Error('Surah list validation failed');
+    }
 
-    area.innerHTML = "";
-    result.data.ayahs.forEach(ayah => {
-      const item = document.createElement("div");
-      item.className = "ayah";
-      item.textContent = ayah.text + " ۞";
-      area.appendChild(item);
+    for (let i = 0; i < 114; i++) {
+      if (data[i].number !== i + 1 ||
+          !data[i].name ||
+          !Number.isInteger(data[i].numberOfAyahs)) {
+        throw new Error('Surah list validation failed');
+      }
+    }
+
+    surahList = data;
+    picker.replaceChildren();
+
+    data.forEach(surah => {
+      const option = document.createElement('option');
+      option.value = String(surah.number);
+      option.textContent =
+        surah.number + '. ' + surah.englishName +
+        ' — ' + surah.name;
+      picker.appendChild(option);
     });
+
+    picker.disabled = false;
+    picker.value = '1';
+    await loadSurah();
+
   } catch (error) {
-    area.textContent =
-      "ആയത്തുകൾ ലഭിച്ചില്ല. Internet പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കൂ.";
+    picker.disabled = true;
+    statusBox.textContent =
+      'സൂറത്തുകളുടെ പട്ടിക ലഭിച്ചില്ല. Internet പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കൂ.';
   }
 }
 
-document.getElementById("surah").addEventListener("change", loadSurah);
-loadSurah();
+async function loadSurah() {
+  const number = Number(picker.value);
+  const selected = surahList.find(s => s.number === number);
+  if (!selected) return;
+
+  const thisRequest = ++requestNumber;
+
+  picker.disabled = true;
+  title.textContent = '';
+  area.replaceChildren();
+  statusBox.textContent =
+    selected.englishName + ': ആയത്തുകൾ ലഭിക്കുന്നു...';
+
+  try {
+    const data = await getJson(
+      'https://api.alquran.cloud/v1/surah/' +
+      number + '/quran-uthmani'
+    );
+
+    if (thisRequest !== requestNumber) return;
+
+    if (data.number !== number ||
+        !Array.isArray(data.ayahs) ||
+        data.ayahs.length !== selected.numberOfAyahs) {
+      throw new Error('Ayah count validation failed');
+    }
+
+    for (let i = 0; i < data.ayahs.length; i++) {
+      const ayah = data.ayahs[i];
+      if (ayah.numberInSurah !== i + 1 ||
+          typeof ayah.text !== 'string' ||
+          ayah.text.trim() === '') {
+        throw new Error('Ayah text validation failed');
+      }
+    }
+
+    title.textContent =
+      data.name + ' — ' + data.englishName;
+
+    const fragment = document.createDocumentFragment();
+
+    data.ayahs.forEach(ayah => {
+      const item = document.createElement('div');
+      item.className = 'ayah';
+
+      const text = document.createElement('span');
+      text.textContent = ayah.text + ' ';
+
+      const numberLabel = document.createElement('span');
+      numberLabel.className = 'ayahNo';
+      numberLabel.textContent = '۞ ' + ayah.numberInSurah;
+
+      item.append(text, numberLabel);
+      fragment.appendChild(item);
+    });
+
+    if (thisRequest !== requestNumber) return;
+
+    area.replaceChildren(fragment);
+    statusBox.textContent =
+      'മുഴുവൻ ' + data.ayahs.length +
+      ' ആയത്തുകളും ലഭിച്ചു.';
+
+  } catch (error) {
+    if (thisRequest !== requestNumber) return;
+
+    title.textContent = '';
+    area.replaceChildren();
+    statusBox.textContent =
+      'ആയത്തുകൾ പൂർണമായി ലഭിച്ചില്ല; അതിനാൽ പ്രദർശിപ്പിച്ചിട്ടില്ല. Internet പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കൂ.';
+  } finally {
+    if (thisRequest === requestNumber) {
+      picker.disabled = false;
+    }
+  }
+}
+
+picker.addEventListener('change', loadSurah);
+loadSurahList();
 </script>
 </body>
 </html>
