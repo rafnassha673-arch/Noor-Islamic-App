@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>NOOR — Qur’an Reading</title>
+<style>
+body {
+  margin: 0;
+  padding: 18px;
+  background: #080808;
+  color: #f2c45b;
+  font-family: sans-serif;
+}
+h1 { text-align: center; }
+select, button {
+  padding: 12px;
+  margin: 5px 2px;
+  border-radius: 8px;
+  border: 1px solid #c49b3b;
+  background: #151515;
+  color: #f2c45b;
+  font-size: 16px;
+}
+#quran {
+  color: #fff4d6;
+  font-family: serif;
+  font-size: 28px;
+  line-height: 2.1;
+  text-align: right;
+  direction: rtl;
+  margin-top: 24px;
+}
+.ayah { margin-bottom: 18px; }
+</style>
+</head>
+<body>
+<h1>📖 Qur’an Reading</h1>
+
+<select id="surah">
+  <option value="1">1. Al-Fatihah</option>
+  <option value="2">2. Al-Baqarah</option>
+  <option value="3">3. Aal-Imran</option>
+  <option value="18">18. Al-Kahf</option>
+  <option value="36">36. Ya-Sin</option>
+  <option value="55">55. Ar-Rahman</option>
+  <option value="67">67. Al-Mulk</option>
+  <option value="112">112. Al-Ikhlas</option>
+</select>
+
+<button onclick="changeSize(2)">A+</button>
+<button onclick="changeSize(-2)">A−</button>
+
+<div id="quran">ആയത്തുകൾ ലഭിക്കാൻ Internet ആവശ്യമാണ്.</div>
+
+<script>
+let fontSize = 28;
+
+function changeSize(amount) {
+  fontSize = Math.max(18, Math.min(48, fontSize + amount));
+  document.getElementById("quran").style.fontSize =
+    fontSize + "px";
+}
+
+async function loadSurah() {
+  const number = document.getElementById("surah").value;
+  const area = document.getElementById("quran");
+  area.textContent = "Loading…";
+
+  try {
+    const response = await fetch(
+      "https://api.alquran.cloud/v1/surah/" + number + "/quran-uthmani"
+    );
+    if (!response.ok) throw new Error("Load failed");
+
+    const result = await response.json();
+    if (result.code !== 200) throw new Error("Invalid data");
+
+    area.innerHTML = "";
+    result.data.ayahs.forEach(ayah => {
+      const item = document.createElement("div");
+      item.className = "ayah";
+      item.textContent = ayah.text + " ۞";
+      area.appendChild(item);
+    });
+  } catch (error) {
+    area.textContent =
+      "ആയത്തുകൾ ലഭിച്ചില്ല. Internet പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കൂ.";
+  }
+}
+
+document.getElementById("surah").addEventListener("change", loadSurah);
+loadSurah();
+</script>
+</body>
+</html>
