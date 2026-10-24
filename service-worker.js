@@ -1,10 +1,11 @@
 
-const CACHE_NAME = "noor-islamic-app-v1";
+const CACHE_NAME = "noor-islamic-app-v2";
 
 const APP_FILES = [
   "./",
   "./index.html",
-  "./manifest.json"
+  "./manifest.json",
+  "./quran-reading.html"
 ];
 
 self.addEventListener("install", (event) => {
