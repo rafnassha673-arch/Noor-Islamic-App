@@ -1,1 +1,471 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#0b1f17">
+<title>NOOR — Qur'an Search</title>
+
+<style>
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  padding: 16px;
+  background: #080808;
+  color: #edbd50;
+  font-family: Arial, sans-serif;
+}
+
+h1 {
+  text-align: center;
+  margin: 24px 0;
+  font-size: 30px;
+}
+
+h2 { font-size: 22px; }
+
+.panel {
+  background: #151515;
+  border: 1px solid #574522;
+  border-radius: 14px;
+  padding: 16px;
+  margin: 16px 0;
+}
+
+input, button {
+  width: 100%;
+  padding: 13px;
+  margin-top: 10px;
+  border: 1px solid #a98736;
+  border-radius: 9px;
+  background: #080808;
+  color: #f2c45b;
+  font-size: 16px;
+}
+
+button {
+  background: #211b0e;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:disabled { opacity: .5; }
+
+.hint, #status {
+  color: #d2c9b8;
+  line-height: 1.7;
+  font-size: 14px;
+}
+
+#status { text-align: center; }
+
+.result {
+  border-bottom: 1px solid #40341e;
+  padding: 16px 0;
+}
+
+.resultHead {
+  color: #edbd50;
+  font-size: 14px;
+  margin-bottom: 10px;
+}
+
+.arabic {
+  color: #fff4d6;
+  font-family: serif;
+  font-size: 27px;
+  line-height: 2.1;
+  direction: rtl;
+  text-align: right;
+  overflow-wrap: anywhere;
+}
+
+.smallButton {
+  width: auto;
+  padding: 9px 14px;
+  font-size: 14px;
+}
+
+a { color: #f2c45b; }
+
+#results { margin-bottom: 30px; }
+</style>
+</head>
+
+<body>
+
+<h1>🔎 Qur'an Search</h1>
+
+<p class="hint" style="text-align:center">
+  ഖുർആനിലെ വാക്കുകൾ, സൂറത്തുകൾ, പേജ് നമ്പറുകൾ തിരയാം
+</p>
+
+<div class="panel">
+  <h2>1. 🔎 Word Search</h2>
+  <form id="wordForm">
+    <input id="wordInput"
+      type="search"
+      placeholder="അറബി വാക്ക് നൽകുക"
+      autocomplete="off"
+      required>
+    <button id="wordButton" type="submit">
+      വാക്ക് തിരയുക
+    </button>
+  </form>
+  <p class="hint">
+    ഉദാ: الله — തിരയൽ ഫലങ്ങൾ API ലഭ്യമാക്കുന്ന
+    അറബി ടെക്സ്റ്റിനെ ആശ്രയിച്ചിരിക്കും.
+  </p>
+</div>
+
+<div class="panel">
+  <h2>2. 📚 Surah Search</h2>
+  <form id="surahForm">
+    <input id="surahInput"
+      type="search"
+      placeholder="സൂറത്തിന്റെ പേര് നൽകുക"
+      autocomplete="off"
+      required>
+    <button type="submit">സൂറത്ത് തിരയുക</button>
+  </form>
+  <div id="surahResults"></div>
+</div>
+
+<div class="panel">
+  <h2>3. 📖 Madani Mushaf Page Search</h2>
+  <form id="pageForm">
+    <input id="pageInput"
+      type="number"
+      min="1"
+      max="604"
+      step="1"
+      placeholder="പേജ് നമ്പർ (1–604)"
+      required>
+    <button type="submit">പേജ് തുറക്കുക</button>
+  </form>
+  <p class="hint">
+    604 പേജുള്ള മദീന മുസ്ഹഫിന്റെ പേജ് ക്രമം ഉപയോഗിക്കുന്നു.
+  </p>
+</div>
+
+<div id="status" role="status" aria-live="polite"></div>
+<div id="results"></div>
+
+<script>
+'use strict';
+
+const API = 'https://api.alquran.cloud/v1';
+const $ = id => document.getElementById(id);
+
+let surahs = [];
+let searchRequest = 0;
+
+function setStatus(message) {
+  $('status').textContent = message;
+}
+
+function clearResults() {
+  $('results').replaceChildren();
+}
+
+async function getData(url) {
+  const response = await fetch(url);
+
+  if (!response.ok) {
+    throw new Error('Network error: ' + response.status);
+  }
+
+  const json = await response.json();
+
+  if (json.code !== 200 || json.data == null) {
+    throw new Error('Invalid API response');
+  }
+
+  return json.data;
+}
+
+function addResult(heading, arabicText, numberText) {
+  const item = document.createElement('div');
+  item.className = 'result';
+
+  const head = document.createElement('div');
+  head.className = 'resultHead';
+  head.textContent = heading;
+
+  item.appendChild(head);
+
+  if (arabicText) {
+    const arabic = document.createElement('div');
+    arabic.className = 'arabic';
+    arabic.lang = 'ar';
+    arabic.textContent = arabicText;
+    item.appendChild(arabic);
+  }
+
+  if (numberText) {
+    const meta = document.createElement('p');
+    meta.className = 'hint';
+    meta.textContent = numberText;
+    item.appendChild(meta);
+  }
+
+  $('results').appendChild(item);
+}
+
+function validAyahs(data) {
+  return data &&
+    Array.isArray(data.ayahs) &&
+    data.ayahs.length > 0 &&
+    data.ayahs.every(a =>
+      typeof a.text === 'string' &&
+      a.text.trim() !== '' &&
+      Number.isInteger(a.numberInSurah) &&
+      Number.isInteger(a.number)
+    );
+}
+
+async function loadSurahList() {
+  try {
+    const data = await getData(API + '/surah');
+
+    if (!Array.isArray(data) || data.length !== 114) {
+      throw new Error('Invalid Surah list');
+    }
+
+    surahs = data;
+  } catch (error) {
+    setStatus(
+      'സൂറത്തുകളുടെ പട്ടിക ലഭിച്ചില്ല. Internet പരിശോധിച്ച് വീണ്ടും തുറക്കൂ.'
+    );
+  }
+}
+
+/* Word search */
+$('wordForm').addEventListener('submit', async event => {
+  event.preventDefault();
+
+  const word = $('wordInput').value.trim();
+  if (!word) return;
+
+  const request = ++searchRequest;
+  clearResults();
+  setStatus('വാക്ക് തിരയുന്നു...');
+  $('wordButton').disabled = true;
+
+  try {
+    const url = API + '/search/' +
+      encodeURIComponent(word) +
+      '/all/quran-uthmani';
+
+    const data = await getData(url);
+
+    if (request !== searchRequest) return;
+
+    if (!Array.isArray(data.matches)) {
+      throw new Error('Search results unavailable');
+    }
+
+    if (data.matches.length === 0) {
+      setStatus('ഈ വാക്കിന് ഫലങ്ങൾ കണ്ടെത്താനായില്ല.');
+      return;
+    }
+
+    data.matches.forEach(match => {
+      const surahName =
+        match.surah && match.surah.englishName
+          ? match.surah.englishName
+          : 'Surah';
+
+      const surahArabic =
+        match.surah && match.surah.name
+          ? ' — ' + match.surah.name
+          : '';
+
+      addResult(
+        surahName + surahArabic +
+        ', ആയത്ത് ' + match.numberInSurah,
+        match.text,
+        'ആകെ ഫലങ്ങൾ: ' + data.matches.length
+      );
+    });
+
+    setStatus(
+      'കിട്ടിയ ഫലങ്ങൾ: ' + data.matches.length
+    );
+
+  } catch (error) {
+    if (request !== searchRequest) return;
+
+    setStatus(
+      'തിരയൽ ഇപ്പോൾ പൂർത്തിയാക്കാനായില്ല. Internet പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കൂ.'
+    );
+  } finally {
+    if (request === searchRequest) {
+      $('wordButton').disabled = false;
+    }
+  }
+});
+
+/* Surah search */
+$('surahForm').addEventListener('submit', event => {
+  event.preventDefault();
+
+  const query = $('surahInput').value.trim().toLowerCase();
+  $('surahResults').replaceChildren();
+
+  if (!query) return;
+
+  const found = surahs.filter(s =>
+    String(s.number) === query ||
+    s.englishName.toLowerCase().includes(query) ||
+    s.englishNameTranslation.toLowerCase().includes(query) ||
+    s.name.includes(query)
+  );
+
+  if (!found.length) {
+    $('surahResults').textContent =
+      'സൂറത്ത് കണ്ടെത്താനായില്ല. പേര് വീണ്ടും പരിശോധിക്കൂ.';
+    return;
+  }
+
+  found.forEach(surah => {
+    const row = document.createElement('div');
+    row.className = 'result';
+
+    const name = document.createElement('div');
+    name.className = 'resultHead';
+    name.textContent =
+      surah.number + '. ' + surah.englishName +
+      ' — ' + surah.name;
+
+    const button = document.createElement('button');
+    button.className = 'smallButton';
+    button.textContent = 'സൂറത്ത് തുറക്കുക';
+
+    button.addEventListener('click', () => {
+      loadFullSurah(surah);
+    });
+
+    row.append(name, button);
+    $('surahResults').appendChild(row);
+  });
+});
+
+async function loadFullSurah(surah) {
+  const request = ++searchRequest;
+  clearResults();
+  setStatus(surah.englishName + ' ലഭിക്കുന്നു...');
+
+  try {
+    const data = await getData(
+      API + '/surah/' + surah.number + '/quran-uthmani'
+    );
+
+    if (request !== searchRequest) return;
+
+    if (
+      data.number !== surah.number ||
+      !validAyahs(data) ||
+      data.ayahs.length !== surah.numberOfAyahs
+    ) {
+      throw new Error('Incomplete Surah');
+    }
+
+    data.ayahs.forEach(ayah => {
+      addResult(
+        surah.englishName + ' — ആയത്ത് ' +
+          ayah.numberInSurah,
+        ayah.text,
+        ''
+      );
+    });
+
+    setStatus(
+      surah.englishName + ': മുഴുവൻ ' +
+      data.ayahs.length + ' ആയത്തുകളും ലഭിച്ചു.'
+    );
+
+  } catch (error) {
+    if (request !== searchRequest) return;
+
+    clearResults();
+    setStatus(
+      'സൂറത്ത് പൂർണമായി ലഭിച്ചില്ല. അതിനാൽ പ്രദർശിപ്പിച്ചിട്ടില്ല.'
+    );
+  }
+}
+
+/* Page search */
+$('pageForm').addEventListener('submit', async event => {
+  event.preventDefault();
+
+  const page = Number($('pageInput').value);
+
+  if (!Number.isInteger(page) || page < 1 || page > 604) {
+    setStatus('1 മുതൽ 604 വരെയുള്ള പേജ് നമ്പർ നൽകൂ.');
+    return;
+  }
+
+  const request = ++searchRequest;
+  clearResults();
+  setStatus('പേജ് ' + page + ' ലഭിക്കുന്നു...');
+
+  try {
+    const data = await getData(
+      API + '/page/' + page + '/quran-uthmani'
+    );
+
+    if (request !== searchRequest) return;
+
+    if (
+      data.number !== page ||
+      !Array.isArray(data.ayahs) ||
+      data.ayahs.length === 0 ||
+      !data.ayahs.every(a =>
+        typeof a.text === 'string' &&
+        a.text.trim() !== '' &&
+        Number.isInteger(a.numberInSurah)
+      )
+    ) {
+      throw new Error('Page data incomplete');
+    }
+
+    data.ayahs.forEach(ayah => {
+      const surah = surahs.find(
+        s => s.number === ayah.surah.number
+      );
+
+      const name = surah
+        ? surah.englishName
+        : 'Surah ' + ayah.surah.number;
+
+      addResult(
+        name + ' — ആയത്ത് ' + ayah.numberInSurah,
+        ayah.text,
+        'മദീന മുസ്ഹഫ് പേജ് ' + page
+      );
+    });
+
+    setStatus(
+      'പേജ് ' + page + ': ' +
+      data.ayahs.length + ' ആയത്തുകൾ ലഭിച്ചു.'
+    );
+
+  } catch (error) {
+    if (request !== searchRequest) return;
+
+    clearResults();
+    setStatus(
+      'ഈ പേജിന്റെ ഡാറ്റ ലഭിച്ചില്ല. Internet പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കൂ.'
+    );
+  }
+});
+
+loadSurahList();
+</script>
+
+</body>
+</html>
+
