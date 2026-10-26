@@ -116,6 +116,13 @@ select:disabled {
     font-size: 22px;
   }
 }
+body.noor-light-theme h1,
+body.noor-light-theme h2,
+body.noor-light-theme p,
+body.noor-light-theme #verses,
+body.noor-light-theme #verses * {
+  color: #000000 !important;
+}
 </style>
 </head>
 
@@ -341,6 +348,10 @@ loadSurahList();
 
     document.body.style.color =
       theme === "dark" ? "#eddb50" : "#000000";
+    document.body.classList.toggle(
+  "noor-light-theme",
+  theme !== "dark"
+);
   }
 
   applyNoorTheme();
