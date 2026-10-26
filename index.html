@@ -2,83 +2,60 @@
 <!doctype html>
 <html lang="en">
 <head>
-<link rel="manifest" href="./manifest.json">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#080808">
+<link rel="manifest" href="./manifest.json">
 <title>NOOR — Islamic Learning</title>
 
 <style>
 :root{
-  --bg:#080808;
-  --panel:#151515;
-  --gold:#dfba61;
-  --muted:#aaa;
-  --line:#39342a;
-  --cream:#f8f3e8;
+  --bg:#080808;--panel:#151515;--gold:#dfba61;
+  --muted:#aaa;--line:#39342a;--cream:#f8f3e8;
   --hero-bg:linear-gradient(130deg,#211a0b,#111 70%);
-  --tile-bg:#111;
-  --verse-bg:#0e0e0e;
-  --control-bg:#0b0b0b;
-  --nav-bg:#090909f5;
+  --tile-bg:#111;--verse-bg:#0e0e0e;
+  --control-bg:#0b0b0b;--nav-bg:#090909f5;
   --text:#f8f3e8;
 }
-
 *{box-sizing:border-box}
-
 body{
   margin:0;
   background:radial-gradient(ellipse at top,#211b0d 0,#080808 48%);
   color:var(--text);
   font-family:system-ui,-apple-system,Segoe UI,sans-serif;
 }
-
 button,select,input,textarea{font:inherit}
-
 button,select{
-  background:var(--control-bg);
-  color:var(--text);
-  border:1px solid #5c4b29;
-  border-radius:11px;
-  padding:12px;
-  width:100%;
+  background:var(--control-bg);color:var(--text);
+  border:1px solid #5c4b29;border-radius:11px;
+  padding:12px;width:100%;
 }
-
 button{cursor:pointer;font-weight:650}
 button.primary{background:var(--gold);color:#171108;border-color:var(--gold)}
 button:disabled{opacity:.4}
-
 header{
-  position:relative;
-  text-align:center;
-  padding:25px 55px 20px;
-  border-bottom:1px solid var(--line);
+  position:relative;text-align:center;
+  padding:25px 75px 20px;border-bottom:1px solid var(--line);
 }
-
 .logo{letter-spacing:6px;font-size:12px;color:var(--gold);font-weight:800}
 .brand{font-size:30px;margin:7px 0 2px}
 .sub{color:var(--muted);font-size:13px}
 
-.settings-link{
-  position:absolute;
-  right:18px;
-  top:18px;
-  color:var(--gold);
-  font-size:24px;
-  text-decoration:none;
-  z-index:10;
+.settings-link,.about-link{
+  position:absolute;top:18px;
+  color:var(--gold);font-size:24px;
+  text-decoration:none;z-index:10;
+  display:flex;align-items:center;justify-content:center;
+  width:36px;height:40px;
 }
+.settings-link{right:14px}
+.about-link{right:55px}
 
 .wrap{max-width:780px;margin:auto;padding:16px 14px 95px}
-
 .panel{
-  background:var(--panel);
-  border:1px solid var(--line);
-  border-radius:18px;
-  padding:16px;
-  margin-bottom:14px;
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:18px;padding:16px;margin-bottom:14px;
 }
-
 .heading{color:var(--gold);font-weight:800;font-size:18px;margin:0 0 12px}
 .muted,.note{color:var(--muted);font-size:13px;line-height:1.65}
 .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
@@ -87,195 +64,96 @@ header{
 .wide{grid-column:1/-1}
 
 .nav{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  display:flex;
-  gap:5px;
-  overflow-x:auto;
-  background:var(--nav-bg);
-  border-top:1px solid var(--line);
-  padding:8px max(8px,calc((100vw - 780px)/2));
-  z-index:10;
+  position:fixed;bottom:0;left:0;right:0;
+  display:flex;gap:5px;overflow-x:auto;
+  background:var(--nav-bg);border-top:1px solid var(--line);
+  padding:8px max(8px,calc((100vw - 780px)/2));z-index:10;
 }
-
 .nav button{
-  min-width:76px;
-  flex:1;
-  border-color:transparent;
-  padding:9px 7px;
-  font-size:11px;
-  color:#c8c0b0;
+  min-width:76px;flex:1;border-color:transparent;
+  padding:9px 7px;font-size:11px;color:#c8c0b0;
 }
-
-.nav button.active{
-  background:#2a2211;
-  border-color:#715c2c;
-  color:var(--gold);
-}
+.nav button.active{background:#2a2211;border-color:#715c2c;color:var(--gold)}
 
 .hero{
-  border:1px solid #5b4928;
-  background:var(--hero-bg);
-  border-radius:18px;
-  padding:20px;
-  margin-bottom:14px;
+  border:1px solid #5b4928;background:var(--hero-bg);
+  border-radius:18px;padding:20px;margin-bottom:14px;
 }
-
 .hero h2{font-size:23px;margin:0 0 7px}
 .hero p{margin:0 0 16px;color:var(--muted);line-height:1.6;font-size:14px}
-
 .quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-
 .tile{
-  border:1px solid var(--line);
-  border-radius:14px;
-  padding:14px;
-  background:var(--tile-bg);
-  text-align:left;
-  color:var(--text);
+  border:1px solid var(--line);border-radius:14px;
+  padding:14px;background:var(--tile-bg);
+  text-align:left;color:var(--text);
 }
-
 .tile strong{display:block;color:var(--gold);margin:4px 0}
 .tile span{font-size:12px;color:var(--muted)}
 
 .arabic{
   font-family:"Noto Naskh Arabic","Amiri",serif;
-  font-size:27px;
-  line-height:2;
-  text-align:right;
-  direction:rtl;
-  margin:12px 0;
+  font-size:27px;line-height:2;text-align:right;
+  direction:rtl;margin:12px 0;
 }
-
 .verse{
-  border:1px solid var(--line);
-  background:var(--verse-bg);
-  border-radius:14px;
-  padding:14px;
-  margin-top:10px;
+  border:1px solid var(--line);background:var(--verse-bg);
+  border-radius:14px;padding:14px;margin-top:10px;
 }
-
-.vhead{
-  display:flex;
-  justify-content:space-between;
-  gap:8px;
-  color:var(--gold);
-  font-size:12px;
-}
-
+.vhead{display:flex;justify-content:space-between;gap:8px;color:var(--gold);font-size:12px}
 .audio{width:100%;margin-top:12px;height:38px}
 .status{font-size:13px;color:var(--muted);margin-top:10px;min-height:18px}
 .listbtn{text-align:left;margin:5px 0}
 .quizopt{margin:5px 0;text-align:left}
 .hidden{display:none!important}
-
 textarea{
-  width:100%;
-  min-height:100px;
-  border-radius:11px;
-  border:1px solid var(--line);
-  background:var(--control-bg);
-  color:var(--text);
-  padding:12px;
+  width:100%;min-height:100px;border-radius:11px;
+  border:1px solid var(--line);background:var(--control-bg);
+  color:var(--text);padding:12px;
 }
-
 .pill{
-  display:inline-block;
-  border:1px solid var(--line);
-  border-radius:20px;
-  padding:5px 9px;
-  font-size:11px;
-  color:var(--gold);
-  margin:0 4px 5px 0;
+  display:inline-block;border:1px solid var(--line);
+  border-radius:20px;padding:5px 9px;font-size:11px;
+  color:var(--gold);margin:0 4px 5px 0;
 }
 
-/* NOOR LIGHT THEME */
+/* LIGHT THEME */
 body.noor-light-theme{
-  --bg:#f5f7f5;
-  --panel:#ffffff;
-  --gold:#526b39;
-  --muted:#596257;
-  --line:#d8dfd5;
-  --cream:#26352c;
-  --hero-bg:linear-gradient(130deg,#edf3e9,#ffffff 75%);
-  --tile-bg:#ffffff;
-  --verse-bg:#f8faf7;
-  --control-bg:#ffffff;
-  --nav-bg:rgba(255,255,255,.97);
-  --text:#26352c;
+  --bg:#f5f7f5;--panel:#fff;--gold:#526b39;
+  --muted:#596257;--line:#d8dfd5;--cream:#26352c;
+  --hero-bg:linear-gradient(130deg,#edf3e9,#fff 75%);
+  --tile-bg:#fff;--verse-bg:#f8faf7;--control-bg:#fff;
+  --nav-bg:rgba(255,255,255,.97);--text:#26352c;
   background:linear-gradient(180deg,#edf3e9 0%,#f5f7f5 260px,#f5f7f5 100%);
   color:var(--text);
 }
-
 body.noor-light-theme .logo,
 body.noor-light-theme .heading,
 body.noor-light-theme .field label,
 body.noor-light-theme .tile strong,
-body.noor-light-theme .vhead{
-  color:#526b39;
-}
-
-body.noor-light-theme .hero{
-  border-color:#cbd8c3;
-}
-
+body.noor-light-theme .vhead{color:#526b39}
+body.noor-light-theme .hero{border-color:#cbd8c3}
 body.noor-light-theme .hero p,
 body.noor-light-theme .tile span,
 body.noor-light-theme .muted,
 body.noor-light-theme .note,
 body.noor-light-theme .sub,
-body.noor-light-theme .status{
-  color:#596257;
-}
-
+body.noor-light-theme .status{color:#596257}
 body.noor-light-theme .panel,
 body.noor-light-theme .tile,
-body.noor-light-theme .verse{
-  border-color:#d8dfd5;
-}
-
+body.noor-light-theme .verse{border-color:#d8dfd5}
 body.noor-light-theme button,
 body.noor-light-theme select,
 body.noor-light-theme textarea{
-  background:#ffffff;
-  color:#26352c;
-  border-color:#bdcbb5;
+  background:#fff;color:#26352c;border-color:#bdcbb5;
 }
-
-body.noor-light-theme button.primary{
-  background:#526b39;
-  color:#ffffff;
-  border-color:#526b39;
-}
-
-body.noor-light-theme .nav{
-  border-top-color:#d8dfd5;
-}
-
-body.noor-light-theme .nav button{
-  color:#4f5c4b;
-}
-
-body.noor-light-theme .nav button.active{
-  background:#e5eedf;
-  border-color:#bdcbb5;
-  color:#40582f;
-}
-
-body.noor-light-theme .pill{
-  border-color:#bdcbb5;
-  color:#526b39;
-}
-
-body.noor-light-theme .arabic{
-  color:#202820;
-}
-
-body.noor-light-theme .settings-link{
-  color:#526b39;
-}
+body.noor-light-theme button.primary{background:#526b39;color:#fff;border-color:#526b39}
+body.noor-light-theme .nav{border-top-color:#d8dfd5}
+body.noor-light-theme .nav button{color:#4f5c4b}
+body.noor-light-theme .nav button.active{background:#e5eedf;border-color:#bdcbb5;color:#40582f}
+body.noor-light-theme .pill{border-color:#bdcbb5;color:#526b39}
+body.noor-light-theme .arabic{color:#202820}
+body.noor-light-theme .settings-link,
+body.noor-light-theme .about-link{color:#526b39}
 
 @media(max-width:440px){
   .grid{grid-template-columns:1fr}
@@ -286,18 +164,17 @@ body.noor-light-theme .settings-link{
 }
 </style>
 </head>
-
 <body>
 
 <header>
   <div class="logo">NOOR • نور</div>
   <div class="brand">Islamic Learning</div>
   <div class="sub">Read • Listen • Learn • Reflect</div>
-  <a href="./settings.html" class="settings-link" aria-label="Settings">⚙️</a>
+  <a href="./about.html" class="about-link" aria-label="About NOOR" title="About NOOR">ℹ️</a>
+  <a href="./settings.html" class="settings-link" aria-label="Settings" title="Settings">⚙️</a>
 </header>
 
 <main class="wrap">
-
 <section id="home" class="page">
   <div class="hero">
     <span class="pill">BLACK &amp; GOLD EDITION</span>
@@ -305,7 +182,6 @@ body.noor-light-theme .settings-link{
     <p>Your Qur’an reading and recitation space. Choose a Juz or Surah, select a reciter, and listen with automatic continuation where supported.</p>
     <button class="primary" onclick="showPage('quran')">Open Qur’an →</button>
   </div>
-
   <div class="quick">
     <button class="tile" onclick="showPage('quran')">📖<strong>Al-Qur’an</strong><span>30 Juz · 114 Surahs · 3 reciters</span></button>
     <button class="tile" onclick="showPage('askai')">🤖<strong>Ask AI</strong><span>Ask a question in ChatGPT</span></button>
@@ -318,7 +194,6 @@ body.noor-light-theme .settings-link{
   <div class="panel">
     <h2 class="heading">📖 Al-Qur’an Al-Kareem</h2>
     <p class="note">Choose a Juz or Surah. Qur’an text and audio require an internet connection.</p>
-
     <div class="grid">
       <div class="field">
         <label for="browse">BROWSE BY</label>
@@ -327,12 +202,10 @@ body.noor-light-theme .settings-link{
           <option value="surah">Surah (1–114)</option>
         </select>
       </div>
-
       <div class="field">
         <label id="itemLabel" for="item">SELECT JUZ</label>
         <select id="item"></select>
       </div>
-
       <div class="field wide">
         <label for="reciter">RECITER / QARI</label>
         <select id="reciter">
@@ -342,12 +215,10 @@ body.noor-light-theme .settings-link{
         </select>
       </div>
     </div>
-
     <button id="load" class="primary">Load Qur’an</button>
     <div id="qstatus" class="status">Choose a Juz or Surah, then tap Load Qur’an.</div>
     <div id="reciterNote" class="note">Ayah-by-ayah recitation with automatic continuation when supported by the audio source.</div>
   </div>
-
   <div class="panel">
     <h3 class="heading">Recitation &amp; Ayat</h3>
     <div id="verses"><p class="note">Your selected passage will appear here.</p></div>
@@ -358,10 +229,8 @@ body.noor-light-theme .settings-link{
   <div class="panel">
     <h2 class="heading">🤖 Ask AI</h2>
     <p class="note">Type a question and open ChatGPT with your prompt. This HTML app does not include a built-in GPT model; ChatGPT opens separately.</p>
-
     <label for="aiQuestion" style="display:block;color:var(--gold);font-size:12px;margin:10px 0 7px">YOUR QUESTION</label>
     <textarea id="aiQuestion" placeholder="Ask about a Qur’an ayah, meaning, recitation, or how to use NOOR…"></textarea>
-
     <button class="primary" style="margin-top:10px" onclick="askChatGPT()">Ask in ChatGPT ↗</button>
     <p class="note">For religious rulings and hadith grading, verify answers with trusted scholars and reliable sources.</p>
   </div>
@@ -374,7 +243,6 @@ body.noor-light-theme .settings-link{
     <div id="bookmarkList"></div>
   </div>
 </section>
-
 </main>
 
 <nav class="nav">
@@ -387,42 +255,23 @@ body.noor-light-theme .settings-link{
 <script>
 'use strict';
 
-/* Read the theme saved by NOOR Settings */
 function applyNoorTheme(){
-  let theme = 'light';
-
-  try{
-    theme = localStorage.getItem('noor-theme') || 'light';
-  }catch(error){}
-
-  document.body.classList.toggle(
-    'noor-light-theme',
-    theme !== 'dark'
-  );
+  let theme='light';
+  try{theme=localStorage.getItem('noor-theme')||'light'}catch(error){}
+  document.body.classList.toggle('noor-light-theme',theme!=='dark');
 }
-
 applyNoorTheme();
 window.addEventListener('pageshow',applyNoorTheme);
-
 window.addEventListener('storage',function(event){
-  if(event.key === 'noor-theme' || event.key === null){
-    applyNoorTheme();
-  }
+  if(event.key==='noor-theme'||event.key===null)applyNoorTheme();
 });
 
-const $ = id => document.getElementById(id);
+const $=id=>document.getElementById(id);
 
 function showPage(id){
-  document.querySelectorAll('.page').forEach(p=>
-    p.classList.toggle('hidden',p.id !== id)
-  );
-
-  document.querySelectorAll('.nav button').forEach(b=>
-    b.classList.toggle('active',b.dataset.page === id)
-  );
-
-  if(id === 'bookmarks') renderBookmarks();
-
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('hidden',p.id!==id));
+  document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
+  if(id==='bookmarks')renderBookmarks();
   window.scrollTo({top:0,behavior:'smooth'});
 }
 
@@ -430,292 +279,166 @@ $('browse').addEventListener('change',fillOptions);
 fillOptions();
 
 function fillOptions(){
-  const isJuz = $('browse').value === 'juz';
-
-  $('itemLabel').textContent = isJuz ? 'SELECT JUZ' : 'SELECT SURAH';
-  $('item').innerHTML = '';
-
+  const isJuz=$('browse').value==='juz';
+  $('itemLabel').textContent=isJuz?'SELECT JUZ':'SELECT SURAH';
+  $('item').innerHTML='';
   for(let n=1;n<=(isJuz?30:114);n++){
-    const o = document.createElement('option');
-    o.value = n;
-    o.textContent = isJuz ? 'Juz ' + n : 'Surah ' + n;
+    const o=document.createElement('option');
+    o.value=n;o.textContent=isJuz?'Juz '+n:'Surah '+n;
     $('item').append(o);
   }
 }
 
-let loaded = [],currentType = 'juz',currentNumber = 1;
+let loaded=[],currentType='juz',currentNumber=1;
 
 function audioUrl(s,a){
-  const ss = String(s).padStart(3,'0');
-  const aa = String(a).padStart(3,'0');
-
-  if($('reciter').value === 'yasir'){
+  const ss=String(s).padStart(3,'0');
+  const aa=String(a).padStart(3,'0');
+  if($('reciter').value==='yasir')
     return `https://everyayah.com/data/Yasser_Ad-Dussary_128kbps/${ss}${aa}.mp3`;
-  }
-
-  if($('reciter').value === 'badr'){
+  if($('reciter').value==='badr')
     return `https://cdn.mp3quran.net/audio/badr-turki/r1/${ss}.mp3`;
-  }
-
   return `https://everyayah.com/data/Alafasy_128kbps/${ss}${aa}.mp3`;
 }
 
 $('reciter').addEventListener('change',()=>{
-  $('reciterNote').textContent =
-    $('reciter').value === 'badr'
-    ? 'Badr Al-Turki is set up as surah-level audio where available; per-ayah files may not be available from this source.'
-    : 'When an ayah ends, the next ayah starts automatically when the browser and audio source allow it.';
+  $('reciterNote').textContent=$('reciter').value==='badr'
+    ?'Badr Al-Turki is set up as surah-level audio where available; per-ayah files may not be available from this source.'
+    :'When an ayah ends, the next ayah starts automatically when the browser and audio source allow it.';
 });
 
 async function loadPassage(){
-  currentType = $('browse').value;
-  currentNumber = Number($('item').value);
-
-  $('load').disabled = true;
-  $('qstatus').textContent = 'Loading Qur’an text…';
-  $('verses').innerHTML = '';
-
+  currentType=$('browse').value;
+  currentNumber=Number($('item').value);
+  $('load').disabled=true;
+  $('qstatus').textContent='Loading Qur’an text…';
+  $('verses').innerHTML='';
   try{
-    const url = currentType === 'juz'
-      ? `https://api.alquran.cloud/v1/juz/${currentNumber}/quran-uthmani`
-      : `https://api.alquran.cloud/v1/surah/${currentNumber}/quran-uthmani`;
-
-    const response = await fetch(url);
-
-    if(!response.ok) throw Error('Qur’an text service unavailable');
-
-    const json = await response.json();
-
-    if(json.code !== 200 || !json.data) throw Error('No Qur’an text returned');
-
-    if(currentType === 'surah'){
-      const d = json.data;
-
-      loaded = (d.ayahs || []).map(a=>({
-        ...a,
-        surah:{
-          number:d.number,
-          englishName:d.englishName,
-          name:d.name
-        }
-      }));
+    const url=currentType==='juz'
+      ?`https://api.alquran.cloud/v1/juz/${currentNumber}/quran-uthmani`
+      :`https://api.alquran.cloud/v1/surah/${currentNumber}/quran-uthmani`;
+    const response=await fetch(url);
+    if(!response.ok)throw Error('Qur’an text service unavailable');
+    const json=await response.json();
+    if(json.code!==200||!json.data)throw Error('No Qur’an text returned');
+    if(currentType==='surah'){
+      const d=json.data;
+      loaded=(d.ayahs||[]).map(a=>({...a,surah:{number:d.number,englishName:d.englishName,name:d.name}}));
     }else{
-      loaded = (json.data.ayahs || []).map(a=>({
-        ...a,
-        surah:a.surah || {number:1,englishName:'Qur’an'}
-      }));
+      loaded=(json.data.ayahs||[]).map(a=>({...a,surah:a.surah||{number:1,englishName:'Qur’an'}}));
     }
-
-    if(!loaded.length) throw Error('No verses found');
-
+    if(!loaded.length)throw Error('No verses found');
     renderVerses();
-
-    $('qstatus').textContent =
-      `${currentType === 'juz' ? 'Juz' : 'Surah'} ${currentNumber} loaded • ${loaded.length} ayat. Tap Play to listen.`;
-
+    $('qstatus').textContent=`${currentType==='juz'?'Juz':'Surah'} ${currentNumber} loaded • ${loaded.length} ayat. Tap Play to listen.`;
   }catch(e){
-    $('qstatus').textContent =
-      'Could not load content. Check internet connection and try again. (' + e.message + ')';
-
-    $('verses').innerHTML =
-      '<p class="note">Some networks or browsers may block online requests. Try again in Chrome with internet access.</p>';
-
-  }finally{
-    $('load').disabled = false;
-  }
+    $('qstatus').textContent='Could not load content. Check internet connection and try again. ('+e.message+')';
+    $('verses').innerHTML='<p class="note">Some networks or browsers may block online requests. Try again in Chrome with internet access.</p>';
+  }finally{$('load').disabled=false}
 }
 
 function renderVerses(){
-  $('verses').innerHTML = '';
-
+  $('verses').innerHTML='';
   loaded.forEach(ayah=>{
-    const card = document.createElement('article');
-    card.className = 'verse';
-
-    const head = document.createElement('div');
-    head.className = 'vhead';
-
-    const label = document.createElement('span');
-    label.textContent =
-      (ayah.surah.englishName || 'Surah ' + ayah.surah.number) +
-      ' • Ayah ' + ayah.numberInSurah;
-
-    const global = document.createElement('span');
-    global.textContent = '#' + ayah.number;
-
+    const card=document.createElement('article');card.className='verse';
+    const head=document.createElement('div');head.className='vhead';
+    const label=document.createElement('span');
+    label.textContent=(ayah.surah.englishName||'Surah '+ayah.surah.number)+' • Ayah '+ayah.numberInSurah;
+    const global=document.createElement('span');global.textContent='#'+ayah.number;
     head.append(label,global);
-
-    const arabic = document.createElement('div');
-    arabic.className = 'arabic';
-    arabic.lang = 'ar';
-    arabic.dir = 'rtl';
-    arabic.textContent = ayah.text;
-
-    const mark = document.createElement('button');
-    mark.textContent = '🔖 Bookmark this ayah';
-    mark.style.marginTop = '8px';
-    mark.onclick = ()=>addBookmark(ayah);
-
+    const arabic=document.createElement('div');
+    arabic.className='arabic';arabic.lang='ar';arabic.dir='rtl';arabic.textContent=ayah.text;
+    const mark=document.createElement('button');
+    mark.textContent='🔖 Bookmark this ayah';mark.style.marginTop='8px';
+    mark.onclick=()=>addBookmark(ayah);
     card.append(head,arabic);
-
-    const audio = document.createElement('audio');
-    audio.className = 'audio';
-    audio.controls = true;
-    audio.preload = 'none';
-    audio.src = audioUrl(ayah.surah.number,ayah.numberInSurah);
-
+    const audio=document.createElement('audio');
+    audio.className='audio';audio.controls=true;audio.preload='none';
+    audio.src=audioUrl(ayah.surah.number,ayah.numberInSurah);
     audio.addEventListener('error',()=>{
-      $('qstatus').textContent =
-        'This recitation could not be loaded. Try another reciter or check your connection.';
+      $('qstatus').textContent='This recitation could not be loaded. Try another reciter or check your connection.';
     });
-
     audio.addEventListener('ended',()=>{
-      if($('reciter').value === 'badr'){
-        $('qstatus').textContent =
-          'This surah recording ended. Badr Al-Turki audio is surah-level; select the next surah to continue.';
+      if($('reciter').value==='badr'){
+        $('qstatus').textContent='This surah recording ended. Badr Al-Turki audio is surah-level; select the next surah to continue.';
         return;
       }
-
-      const next = card.nextElementSibling?.querySelector('audio');
-
+      const next=card.nextElementSibling?.querySelector('audio');
       if(next){
-        next.play()
-          .then(()=>next.closest('.verse').scrollIntoView({
-            behavior:'smooth',
-            block:'center'
-          }))
-          .catch(()=>$('qstatus').textContent =
-            'Browser stopped automatic playback. Tap Play on the next ayah to continue.');
+        next.play().then(()=>next.closest('.verse').scrollIntoView({behavior:'smooth',block:'center'}))
+          .catch(()=>$('qstatus').textContent='Browser stopped automatic playback. Tap Play on the next ayah to continue.');
       }else{
-        $('qstatus').textContent =
-          'Selected passage finished. Choose another Juz or Surah.';
+        $('qstatus').textContent='Selected passage finished. Choose another Juz or Surah.';
       }
     });
-
-    card.append(audio,mark);
-    $('verses').append(card);
+    card.append(audio,mark);$('verses').append(card);
   });
 }
-
 $('load').addEventListener('click',loadPassage);
 
 function getBookmarks(){
-  try{
-    return JSON.parse(localStorage.getItem('noorBookmarks') || '[]');
-  }catch(e){
-    return [];
-  }
+  try{return JSON.parse(localStorage.getItem('noorBookmarks')||'[]')}catch(e){return []}
 }
-
 function addBookmark(ayah){
-  const a = getBookmarks();
-
-  if(!a.some(x=>x.number === ayah.number)){
+  const a=getBookmarks();
+  if(!a.some(x=>x.number===ayah.number)){
     a.unshift({
-      number:ayah.number,
-      numberInSurah:ayah.numberInSurah,
+      number:ayah.number,numberInSurah:ayah.numberInSurah,
       surahNumber:ayah.surah.number,
-      surahName:ayah.surah.englishName || ('Surah ' + ayah.surah.number),
+      surahName:ayah.surah.englishName||('Surah '+ayah.surah.number),
       text:ayah.text
     });
-
     localStorage.setItem('noorBookmarks',JSON.stringify(a));
-    $('qstatus').textContent = 'Ayah bookmarked! Open Bookmarks to find it later.';
-  }else{
-    $('qstatus').textContent = 'This ayah is already bookmarked.';
-  }
+    $('qstatus').textContent='Ayah bookmarked! Open Bookmarks to find it later.';
+  }else{$('qstatus').textContent='This ayah is already bookmarked.'}
 }
 
 function renderBookmarks(){
-  const a = getBookmarks();
-  $('bookmarkList').innerHTML = '';
-
+  const a=getBookmarks();$('bookmarkList').innerHTML='';
   if(!a.length){
-    $('bookmarkList').innerHTML =
-      '<p class="note">No bookmarks yet. Open Qur’an and tap “Bookmark this ayah” below any verse.</p>';
+    $('bookmarkList').innerHTML='<p class="note">No bookmarks yet. Open Qur’an and tap “Bookmark this ayah” below any verse.</p>';
     return;
   }
-
   a.forEach(x=>{
-    const card = document.createElement('div');
-    card.className = 'verse';
-
-    const h = document.createElement('div');
-    h.className = 'vhead';
-    h.textContent = x.surahName + ' • Ayah ' + x.numberInSurah;
-
-    const ar = document.createElement('div');
-    ar.className = 'arabic';
-    ar.dir = 'rtl';
-    ar.lang = 'ar';
-    ar.textContent = x.text;
-
-    const play = document.createElement('button');
-    play.textContent = 'Open this Surah in Qur’an';
-
-    play.onclick = ()=>{
-      showPage('quran');
-      $('browse').value = 'surah';
-      fillOptions();
-      $('item').value = x.surahNumber;
-      loadPassage();
+    const card=document.createElement('div');card.className='verse';
+    const h=document.createElement('div');h.className='vhead';
+    h.textContent=x.surahName+' • Ayah '+x.numberInSurah;
+    const ar=document.createElement('div');
+    ar.className='arabic';ar.dir='rtl';ar.lang='ar';ar.textContent=x.text;
+    const play=document.createElement('button');play.textContent='Open this Surah in Qur’an';
+    play.onclick=()=>{
+      showPage('quran');$('browse').value='surah';fillOptions();
+      $('item').value=x.surahNumber;loadPassage();
     };
-
-    const del = document.createElement('button');
-    del.textContent = 'Remove bookmark';
-    del.style.marginTop = '7px';
-
-    del.onclick = ()=>{
-      const b = getBookmarks().filter(y=>y.number !== x.number);
-      localStorage.setItem('noorBookmarks',JSON.stringify(b));
-      renderBookmarks();
+    const del=document.createElement('button');
+    del.textContent='Remove bookmark';del.style.marginTop='7px';
+    del.onclick=()=>{
+      const b=getBookmarks().filter(y=>y.number!==x.number);
+      localStorage.setItem('noorBookmarks',JSON.stringify(b));renderBookmarks();
     };
-
-    card.append(h,ar,play,del);
-    $('bookmarkList').append(card);
+    card.append(h,ar,play,del);$('bookmarkList').append(card);
   });
 }
 
 function askChatGPT(){
-  const q = $('aiQuestion').value.trim() ||
-    'Help me study the Qur’an and use the NOOR app.';
-
-  window.open(
-    'https://chatgpt.com/?q=' + encodeURIComponent(q),
-    '_blank',
-    'noopener'
-  );
+  const q=$('aiQuestion').value.trim()||'Help me study the Qur’an and use the NOOR app.';
+  window.open('https://chatgpt.com/?q='+encodeURIComponent(q),'_blank','noopener');
 }
 </script>
 
 <script>
 if('serviceWorker' in navigator){
   window.addEventListener('load',()=>{
-    navigator.serviceWorker
-      .register('./service-worker.js')
+    navigator.serviceWorker.register('./service-worker.js')
       .catch(error=>console.error('Service Worker error:',error));
   });
 }
 </script>
 
-<div style="text-align:center;margin:20px 0;padding:0 14px 10px;max-width:780px;margin-left:auto;margin-right:auto;">
-
+<div style="text-align:center;margin:20px auto;padding:0 14px 10px;max-width:780px">
   <a href="./quran-reading.html"
-     style="display:block;padding:16px;margin-bottom:10px;
-     background:var(--panel);color:var(--gold);
-     border:1px solid var(--line);border-radius:12px;
-     text-decoration:none;font-size:18px;font-weight:bold;">
+     style="display:block;padding:16px;margin-bottom:10px;background:var(--panel);color:var(--gold);border:1px solid var(--line);border-radius:12px;text-decoration:none;font-size:18px;font-weight:bold">
     📖 Qur’an Reading
   </a>
-
-  <a href="./about.html"
-     style="display:block;padding:16px;
-     background:var(--panel);color:var(--gold);
-     border:1px solid var(--line);border-radius:12px;
-     text-decoration:none;font-size:18px;font-weight:bold;">
-    ☾ About NOOR
-  </a>
-
 </div>
 
 </body>
