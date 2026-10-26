@@ -1,0 +1,300 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="theme-color" content="#123b32">
+<title>Settings | NOOR Islamic App</title>
+
+<style>
+:root {
+  --bg: #f5f7f5;
+  --card: #ffffff;
+  --text: #1c2924;
+  --muted: #68756e;
+  --accent: #176b50;
+  --border: #e1e8e2;
+}
+body.dark {
+  --bg: #101713;
+  --card: #1b2520;
+  --text: #edf5ef;
+  --muted: #aab9af;
+  --accent: #71d5a4;
+  --border: #34443a;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  font-family: system-ui, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  transition: background .2s, color .2s;
+}
+header {
+  background: #123b32;
+  color: white;
+  padding: 25px 18px;
+  text-align: center;
+}
+.logo { font-size: 30px; font-weight: 800; letter-spacing: 3px; }
+.arabic { color: #d7c18b; margin-top: 5px; font-size: 19px; }
+header p { margin: 7px 0 0; color: #dce8df; font-size: 14px; }
+main { max-width: 650px; margin: auto; padding: 20px 15px 35px; }
+h2 { font-size: 18px; margin: 24px 0 12px; }
+.card {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+}
+.setting-row {
+  display: flex;
+  align-items: center;
+  gap: 13px;
+}
+.symbol { font-size: 25px; width: 34px; text-align: center; }
+.info { flex: 1; }
+.info strong { display: block; font-size: 15px; }
+.info small { display: block; color: var(--muted); margin-top: 4px; line-height: 1.5; }
+button, .action {
+  font: inherit;
+  cursor: pointer;
+}
+button {
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 14px;
+  background: var(--accent);
+  color: white;
+}
+.action {
+  color: var(--accent);
+  text-decoration: none;
+  font-weight: 650;
+  white-space: nowrap;
+}
+details { margin-top: 10px; }
+summary {
+  cursor: pointer;
+  color: var(--accent);
+  font-weight: 650;
+  padding: 8px 0;
+}
+.policy {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.75;
+}
+.policy h3 { color: var(--text); font-size: 15px; }
+.profile {
+  text-align: center;
+  padding: 23px 15px;
+}
+.avatar {
+  width: 75px; height: 75px;
+  border-radius: 50%;
+  display: grid; place-items: center;
+  background: var(--accent);
+  color: white; font-size: 27px;
+  margin: 0 auto 12px;
+}
+.profile h3 { margin: 5px 0; font-size: 21px; }
+.profile p { color: var(--muted); line-height: 1.7; font-size: 14px; }
+.socials {
+  display: flex; flex-wrap: wrap;
+  gap: 9px; justify-content: center;
+  margin-top: 17px;
+}
+.socials a {
+  text-decoration: none;
+  color: var(--accent);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 13px;
+  font-size: 14px;
+  font-weight: 650;
+}
+footer {
+  text-align: center;
+  color: var(--muted);
+  font-size: 12px;
+  padding: 20px 0;
+}
+.back {
+  display: inline-block;
+  margin-bottom: 15px;
+  color: var(--accent);
+  text-decoration: none;
+  font-size: 14px;
+}
+</style>
+</head>
+
+<body>
+<header>
+  <div class="logo">NOOR</div>
+  <div class="arabic">النور</div>
+  <p>Settings · Personalise your experience</p>
+</header>
+
+<main>
+  <a class="back" href="./index.html">← Back to Home</a>
+
+  <h2>⚙️ App Settings</h2>
+
+  <section class="card">
+    <div class="setting-row">
+      <div class="symbol" id="themeIcon">🌙</div>
+      <div class="info">
+        <strong>Dark / Light Theme</strong>
+        <small id="themeDescription">Choose the appearance you prefer.</small>
+      </div>
+      <button id="themeToggle" type="button">Dark Mode</button>
+    </div>
+  </section>
+
+  <h2>🔒 Privacy & Legal</h2>
+
+  <section class="card">
+    <div class="setting-row">
+      <div class="symbol">🔒</div>
+      <div class="info">
+        <strong>Privacy Policy</strong>
+        <small>How the app handles information and external services.</small>
+      </div>
+    </div>
+    <details>
+      <summary>Read Privacy Policy</summary>
+      <div class="policy">
+        <h3>1. Introduction</h3>
+        <p>NOOR Islamic App is designed to help users access Qur’an reading and Islamic learning resources.</p>
+
+        <h3>2. Personal Information</h3>
+        <p>This Settings page does not ask you to create an account or enter personal information. The app creator does not intentionally collect personal information through this page.</p>
+
+        <h3>3. External Services</h3>
+        <p>Qur’an content and search features may request information from the AlQuran Cloud API. Those requests may disclose technical information, such as your IP address, to the service provider. External services operate under their own privacy policies.</p>
+
+        <h3>4. Theme Preference</h3>
+        <p>Your selected theme is saved in your browser's local storage on your device. Clearing browser or app data may reset this preference.</p>
+
+        <h3>5. External Links</h3>
+        <p>Links to Instagram, YouTube, Facebook and WhatsApp open external services. Any information you share with those services is subject to their respective policies.</p>
+
+        <h3>6. Children's Privacy</h3>
+        <p>Please avoid sharing sensitive personal information through feedback or external links.</p>
+
+        <h3>7. Changes and Contact</h3>
+        <p>This policy may be updated as the app develops. For questions or feedback, contact the creator through the WhatsApp option below.</p>
+        <p><em>Last updated: 26 October 2026</em></p>
+      </div>
+    </details>
+  </section>
+
+  <section class="card">
+    <div class="setting-row">
+      <div class="symbol">📜</div>
+      <div class="info">
+        <strong>Terms & Conditions</strong>
+        <small>Guidelines for using NOOR Islamic App.</small>
+      </div>
+    </div>
+    <details>
+      <summary>Read Terms & Conditions</summary>
+      <div class="policy">
+        <h3>1. Acceptable Use</h3>
+        <p>Use NOOR respectfully and lawfully. Do not attempt to damage, disrupt or misuse the app or its services.</p>
+
+        <h3>2. Islamic Content</h3>
+        <p>The app provides Qur’an-related resources for reading and learning. For questions of religious interpretation, consult qualified scholars. Please verify important religious matters with reliable sources.</p>
+
+        <h3>3. Accuracy and Availability</h3>
+        <p>Content and features may depend on external services and internet connectivity. Continuous availability and error-free operation cannot be guaranteed. Please verify important information independently.</p>
+
+        <h3>4. External Services</h3>
+        <p>Third-party services and websites are governed by their own terms. The app creator does not control their content, policies or availability.</p>
+
+        <h3>5. Intellectual Property</h3>
+        <p>Respect the rights and applicable licences of the app, its design, and any third-party content. Qur’an text and resources may have separate usage terms.</p>
+
+        <h3>6. Changes</h3>
+        <p>Features and these terms may change as the app evolves. Continued use after changes means you should review the updated terms.</p>
+
+        <h3>7. Contact</h3>
+        <p>For questions or feedback, contact the creator using the WhatsApp link provided in About Creator.</p>
+
+        <p><em>Last updated: 26 October 2026</em></p>
+      </div>
+    </details>
+  </section>
+
+  <h2>👤 About Creator</h2>
+
+  <section class="card profile">
+    <div class="avatar">م</div>
+    <h3>Muhammed Rafnas (ZYN)</h3>
+    <p>
+      A creative mind with a passion for Islamic knowledge,
+      meaningful content, and digital creativity.
+    </p>
+    <p>
+      NOOR Islamic App was created with the intention of making
+      Qur’an reading, recitation, and Islamic learning more
+      accessible through a simple digital experience.
+    </p>
+    <p>Created by <strong>@rafnas_zyn</strong></p>
+    <p>May this work be a source of benefit and goodness for everyone who uses it. 🤍</p>
+
+    <div class="socials">
+      <a href="https://www.instagram.com/rafnas_zyn?vrfl=MTU5ZmRkdWV2NWF6dA==" target="_blank" rel="noopener noreferrer">📸 Instagram</a>
+      <a href="https://www.youtube.com/@rafnas_zyn" target="_blank" rel="noopener noreferrer">▶️ YouTube</a>
+      <a href="https://www.facebook.com/share/1KfXrrWC5m/" target="_blank" rel="noopener noreferrer">📘 Facebook</a>
+      <a href="https://wa.me/919645703758?text=Assalamu%20Alaikum!%20I%20have%20feedback%20about%20the%20NOOR%20Islamic%20App." target="_blank" rel="noopener noreferrer">💚 WhatsApp Feedback</a>
+    </div>
+  </section>
+
+  <footer>
+    NOOR Islamic App · Made with 🤍 for beneficial learning
+  </footer>
+</main>
+
+<script>
+(function () {
+  const body = document.body;
+  const toggle = document.getElementById("themeToggle");
+  const icon = document.getElementById("themeIcon");
+  const description = document.getElementById("themeDescription");
+
+  function applyTheme(theme) {
+    const isDark = theme === "dark";
+    body.classList.toggle("dark", isDark);
+    toggle.textContent = isDark ? "Light Mode" : "Dark Mode";
+    icon.textContent = isDark ? "☀️" : "🌙";
+    description.textContent = isDark
+      ? "Dark appearance is enabled."
+      : "Light appearance is enabled.";
+    document.querySelector('meta[name="theme-color"]')
+      .setAttribute("content", isDark ? "#101713" : "#123b32");
+  }
+
+  let savedTheme = "light";
+  try {
+    savedTheme = localStorage.getItem("noor-theme") || "light";
+  } catch (e) {}
+
+  applyTheme(savedTheme);
+
+  toggle.addEventListener("click", function () {
+    const nextTheme = body.classList.contains("dark") ? "light" : "dark";
+    applyTheme(nextTheme);
+    try {
+      localStorage.setItem("noor-theme", nextTheme);
+    } catch (e) {}
+  });
+})();
+</script>
+</body>
+</html>
