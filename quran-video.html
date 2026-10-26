@@ -1,0 +1,300 @@
+
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080808">
+<title>NOOR — Quran Video</title>
+<style>
+:root{--panel:#151515;--gold:#dfba61;--muted:#aaa;--line:#39342a;--text:#f8f3e8;--control:#0b0b0b}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(ellipse at top,#211b0d,#080808 60%);color:var(--text);font-family:system-ui,sans-serif}
+body.light{--panel:#fff;--gold:#526b39;--muted:#596257;--line:#d8dfd5;--text:#26352c;--control:#fff;background:linear-gradient(#edf3e9,#f5f7f5 300px)}
+button,input,select{font:inherit}
+button,select,input{border:1px solid var(--line);border-radius:10px;padding:11px;background:var(--control);color:var(--text)}
+button{cursor:pointer;font-weight:650}
+header{text-align:center;padding:20px 12px;border-bottom:1px solid var(--line)}
+.logo{color:var(--gold);font-size:12px;letter-spacing:5px;font-weight:800}
+.title{font-size:26px;margin:6px}
+.sub,.small{color:var(--muted);font-size:13px;line-height:1.6}
+a{color:var(--gold);text-decoration:none}
+main{max-width:780px;margin:auto;padding:14px 12px 30px}
+.panel,.surah{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:13px;margin-bottom:10px}
+.search{width:100%;margin:12px 0}
+.surah{display:flex;align-items:center;gap:10px}
+.num{color:var(--gold);font-size:12px;min-width:25px}
+.grow{flex:1;min-width:0}
+.surah-name{font-weight:700}
+.arabic{color:var(--gold);font-size:18px;direction:rtl}
+.play{background:var(--gold);color:#171108;border-color:var(--gold);white-space:nowrap}
+.controls{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.controls label{display:block;font-size:12px;color:var(--muted);margin-bottom:5px}
+.controls select,.controls input{width:100%}
+.primary{background:var(--gold);color:#171108;width:100%;border:0}
+.player{width:100%;aspect-ratio:16/9;border:0;border-radius:12px;background:#000}
+.hidden{display:none}
+@media(max-width:430px){.surah{gap:7px;padding:9px}.play{padding:9px;font-size:12px}.controls{grid-template-columns:1fr}.arabic{font-size:16px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">NOOR • نور</div>
+  <div class="title">Quran Video</div>
+  <div class="sub">114 Surahs · Recitation videos</div>
+  <p><a href="./index.html">← Back to NOOR Home</a></p>
+</header>
+
+<main>
+  <section class="panel">
+    <strong>▶ Select a Surah</strong>
+    <p class="small">Choose a Surah to preview its recitation video.</p>
+    <input id="search" class="search" type="search" placeholder="Search Surah name or number…">
+    <div id="playerArea" class="hidden"></div>
+    <p class="small">To start from a selected ayah, its timestamp in the video must be known. Enter that timestamp in seconds below. The app cannot automatically determine ayah timings from a YouTube link alone.</p>
+  </section>
+  <section id="list" aria-label="114 Surahs"></section>
+</main>
+
+<script>
+const SURAHS = [
+["Al-Fatihah","kTuag2gaPaY",7],
+["Al-Baqarah","eH58t9kQcGg",286],
+["Aal-Imran","2Xa7UNege1A",200],
+["An-Nisa","flBhra-KC2w",176],
+["Al-Ma'idah","_FAzQ-gPRYA",120],
+["Al-An'am","Eu-okGNs-64",165],
+["Al-A'raf","uJrwciV1eDM",206],
+["Al-Anfal","E4AMjxYZaq0",75],
+["At-Tawbah","slNtulpZ-kc",129],
+["Yunus","MaGb9vBsMB8",109],
+["Hud","muRQd-Zj_4Q",123],
+["Yusuf","fopaOsX5Sgc",111],
+["Ar-Ra'd","uuw6weRn6tk",43],
+["Ibrahim","Ni_ChKVO1qQ",52],
+["Al-Hijr","-j8D3VXMPgU",99],
+["An-Nahl","9c2jBk3znhA",128],
+["Al-Isra","Ek9wPRDpPO4",111],
+["Al-Kahf","796_VYpPuKs",110],
+["Maryam","prMnpKvykEo",98],
+["Ta-Ha","ZP5fK_6GYsc",135],
+["Al-Anbiya","7zcIiBuEa9Y",112],
+["Al-Hajj","zDAI5Xm7SUg",78],
+["Al-Mu'minun","d5b9QGah-xE",118],
+["An-Nur","8G1AbkXiA70",64],
+["Al-Furqan","tEo63KQaTDc",77],
+["Ash-Shu'ara","Z4OW-oxWoZI",227],
+["An-Naml","ugX0v0odM9g",93],
+["Al-Qasas","RpmbC55Mato",88],
+["Al-Ankabut","9xIpj4EmPsE",69],
+["Ar-Rum","EAA1z5w2uJM",60],
+["Luqman","Ghuu50I3GJM",34],
+["As-Sajdah","WJEGT4Drf8c",30],
+["Al-Ahzab","vztyozvO2SY",73],
+["Saba","Kf8eZN6gbzQ",54],
+["Fatir","IjLOoxWBh0Y",45],
+["Ya-Sin","wXbO5BdkGNo",83],
+["As-Saffat","AhjaUC_9AUQ",182],
+["Sad","N4U1FzL06Ek",88],
+["Az-Zumar","zeMyBNtgn50",75],
+["Ghafir","6ptolXSRcRM",85],
+["Fussilat","p4z-T-cu13E",54],
+["Ash-Shura","QrkpbMN4s_I",53],
+["Az-Zukhruf","PODfxVv4W-0",89],
+["Ad-Dukhan","vH7--OWMOyA",59],
+["Al-Jathiyah","BjwapvWOY6E",37],
+["Al-Ahqaf","Mlj4B6Ux738",35],
+["Muhammad","ySIduGAZB_g",38],
+["Al-Fath","B1fIlONuYK8",29],
+["Al-Hujurat","CyIQf4ZwKcE",18],
+["Qaf","WMpGOD5eQbg",45],
+["Adh-Dhariyat","BRU-kYiwChY",60],
+["At-Tur","IlvnEJVoMzY",49],
+["An-Najm","jJgybRVEGI0",62],
+["Al-Qamar","kaYmdD8lZtA",55],
+["Ar-Rahman","XaG1MupQ_A8",78],
+["Al-Waqi'ah","lTlB8J17ZmM",96],
+["Al-Hadid","RDTO4ypJXV8",29],
+["Al-Mujadilah","M4CdQXPtmP0",22],
+["Al-Hashr","RNOLkhMu9ow",24],
+["Al-Mumtahanah","RJ5SGy8q7fA",13],
+["As-Saff","_KsvpGoB-3c",14],
+["Al-Jumu'ah","eDHXLbuJLU0",11],
+["Al-Munafiqun","4KNtzmApPMM",11],
+["At-Taghabun","bFzu26J1JbA",18],
+["At-Talaq","tFi80ExQElo",12],
+["At-Tahrim","MOZpb8tF9KI",12],
+["Al-Mulk","NolAGkhZ9qo",30],
+["Al-Qalam","ZjBYLjIdWgA",52],
+["Al-Haqqah","ReDnyo-A5o8",52],
+["Al-Ma'arij","BQBHKcc2EA4",44],
+["Nuh","W-WSZ7n2Q9A",28],
+["Al-Jinn","F07ZNNaQj48",28],
+["Al-Muzzammil","bhoa5PJh8hk",20],
+["Al-Muddaththir","u4JiC2tn6QA",56],
+["Al-Qiyamah","ZeSzIpaT_Ec",40],
+["Al-Insan","Sm4DKAMOrlY",31],
+["Al-Mursalat","tM-EJeqw9Oc",50],
+["An-Naba","XVxBbdbYiC8",40],
+["An-Nazi'at","98nuSzp2HKE",46],
+["Abasa","53YNPg03eE0",42],
+["At-Takwir","-pOyFAoFPGw",29],
+["Al-Infitar","zjPdg1Df6t8",19],
+["Al-Mutaffifin","aBd9oocSDgw",36],
+["Al-Inshiqaq","554-nUIEJQI",25],
+["Al-Buruj","M87or3uVMBc",22],
+["At-Tariq","bDw3IMecKxw",17],
+["Al-A'la","6FFYeZBG__w",19],
+["Al-Ghashiyah","BKlEnzBpcJE",26],
+["Al-Fajr","Hef3ASXTVeQ",30],
+["Al-Balad","u8guCfXnfl4",20],
+["Ash-Shams","7h9LSTX-2cM",15],
+["Al-Layl","RpclkjZlXgk",21],
+["Ad-Duha","iDZYdr8Om7o",11],
+["Ash-Sharh","3ck112E1pPo",8],
+["At-Tin","mkOw4HAKRhk",8],
+["Al-Alaq","2MAE9KeuJyY",19],
+["Al-Qadr","hTaPh4I5Mms",5],
+["Al-Bayyinah","SodUDYe8gnU",8],
+["Az-Zalzalah","kfry6adGW6c",8],
+["Al-Adiyat","M4oidtWz7Ww",11],
+["Al-Qari'ah","M-Qx5hamfAg",11],
+["At-Takathur","oNXhijVTlHs",8],
+["Al-Asr","eLGQJduN2ZM",3],
+["Al-Humazah","_Eo-BerNg2Y",9],
+["Al-Fil","bNTxHWzkFTI",5],
+["Quraysh","3CdRW__jl2c",4],
+["Al-Ma'un","01ZG3dCVRSk",7],
+["Al-Kawthar","OJBZ2N9DRic",3],
+["Al-Kafirun","loBVyQvtpGI",6],
+["An-Nasr","f8ZiaGIziMo",3],
+["Al-Masad","xsOZ7qg1b0I",5],
+["Al-Ikhlas","ysAb0iSRKMA",4],
+["Al-Falaq","b8g22PGCrCc",5],
+["An-Nas","8dw8gbQfW8g",6]
+];
+
+const $ = id => document.getElementById(id);
+
+function applyTheme(){
+  let theme = 'light';
+  try { theme = localStorage.getItem('noor-theme') || 'light'; } catch(e) {}
+  document.body.classList.toggle('light', theme !== 'dark');
+}
+applyTheme();
+window.addEventListener('pageshow', applyTheme);
+window.addEventListener('storage', e => {
+  if(e.key === 'noor-theme' || e.key === null) applyTheme();
+});
+
+function renderList(filter=''){
+  const list = $('list');
+  list.innerHTML = '';
+  const query = filter.trim().toLowerCase();
+
+  SURAHS.forEach((s, index) => {
+    const name = s[0], id = s[1];
+    if(!String(index+1).includes(query) && !name.toLowerCase().includes(query)) return;
+
+    const card = document.createElement('article');
+    card.className = 'surah';
+
+    const number = document.createElement('div');
+    number.className = 'num';
+    number.textContent = String(index+1).padStart(3,'0');
+
+    const info = document.createElement('div');
+    info.className = 'grow';
+
+    const title = document.createElement('div');
+    title.className = 'surah-name';
+    title.textContent = name;
+
+    info.append(title);
+
+    const button = document.createElement('button');
+    button.className = 'play';
+    button.textContent = '▶ Preview';
+    button.onclick = () => openSurah(index);
+
+    card.append(number, info, button);
+    list.append(card);
+  });
+}
+
+function openSurah(index){
+  const s = SURAHS[index];
+  const area = $('playerArea');
+  area.classList.remove('hidden');
+  area.innerHTML = '';
+
+  const heading = document.createElement('h3');
+  heading.textContent = (index+1)+'. '+s[0];
+
+  const controls = document.createElement('div');
+  controls.className = 'controls';
+
+  const ayahWrap = document.createElement('div');
+  const ayahLabel = document.createElement('label');
+  ayahLabel.textContent = 'START FROM AYAH';
+
+  const ayah = document.createElement('select');
+  for(let i=1; i<=s[2]; i++){
+    const option = document.createElement('option');
+    option.value = i;
+    option.textContent = 'Ayah '+i;
+    ayah.append(option);
+  }
+  ayahWrap.append(ayahLabel, ayah);
+
+  const timeWrap = document.createElement('div');
+  const timeLabel = document.createElement('label');
+  timeLabel.textContent = 'AYAH TIMESTAMP (SECONDS)';
+
+  const time = document.createElement('input');
+  time.type = 'number';
+  time.min = '0';
+  time.step = '1';
+  time.value = '0';
+  timeWrap.append(timeLabel, time);
+
+  controls.append(ayahWrap, timeWrap);
+
+  const play = document.createElement('button');
+  play.className = 'primary';
+  play.textContent = 'OK — Play video';
+  play.onclick = () => playVideo(s, index+1, Number(ayah.value), Number(time.value)||0);
+
+  const frame = document.createElement('div');
+  frame.id = 'videoFrame';
+
+  area.append(heading, controls, play, frame);
+  playVideo(s, index+1, 1, 0);
+  area.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function playVideo(s, number, ayah, seconds){
+  const frame = $('videoFrame');
+  if(!frame) return;
+
+  const iframe = document.createElement('iframe');
+  iframe.className = 'player';
+  iframe.title = s[0]+' Quran recitation';
+  iframe.allow = 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share';
+  iframe.allowFullscreen = true;
+  iframe.src = 'https://www.youtube-nocookie.com/embed/'+s[1]+'?start='+Math.max(0,Math.floor(seconds))+'&autoplay=1&rel=0';
+
+  frame.innerHTML = '';
+  frame.append(iframe);
+
+  const note = document.createElement('p');
+  note.className = 'small';
+  note.textContent = 'Surah '+number+' · Selected Ayah '+ayah+'. Video starts at '+Math.floor(seconds)+' seconds. Enter the verified timestamp for this ayah; it cannot be calculated from the ayah number automatically.';
+  frame.append(note);
+}
+
+$('search').addEventListener('input', e => renderList(e.target.value));
+renderList();
+</script>
+</body>
+</html>
