@@ -568,5 +568,63 @@ async function init(){
 init();
 </script>
 
+
+<script>
+(function () {
+  function fixNoorTheme() {
+    let theme = 'light';
+
+    try {
+      theme = localStorage.getItem('noor-theme') || 'light';
+    } catch (e) {}
+
+    let style = document.getElementById('noor-theme-fix');
+
+    if (!style) {
+      style = document.createElement('style');
+      style.id = 'noor-theme-fix';
+      document.head.appendChild(style);
+    }
+
+    if (theme === 'light') {
+      style.textContent = `
+        body {
+          background: #f5f7f5 !important;
+          color: #111111 !important;
+        }
+        body h1,
+        body #status,
+        body .hint,
+        body .fieldlabel,
+        body .resultHead,
+        body .arabic {
+          color: #111111 !important;
+        }
+        body .result {
+          border-bottom-color: #d8d8d0 !important;
+        }
+        body input,
+        body select,
+        body .tab,
+        body .result button {
+          background: #ffffff !important;
+          color: #111111 !important;
+        }
+        body .tab.active,
+        body #searchButton,
+        body mark {
+          background: #edbd50 !important;
+          color: #080808 !important;
+        }
+      `;
+    } else {
+      style.textContent = '';
+    }
+  }
+
+  fixNoorTheme();
+  window.addEventListener('pageshow', fixNoorTheme);
+})();
+</script>
 </body>
 </html>
