@@ -328,5 +328,22 @@ picker.addEventListener('change', loadSurah);
 loadSurahList();
 </script>
 
-</body>
+<script>
+(function () {
+  function applyNoorTheme() {
+    let theme = "light";
+    try {
+      theme = localStorage.getItem("noor-theme") || "light";
+    } catch (e) {}
+
+    document.body.style.backgroundColor =
+      theme === "dark" ? "#080808" : "#f5f7f5";
+
+    document.body.style.color =
+      theme === "dark" ? "#eddb50" : "#1c2924";
+  }
+
+  applyNoorTheme();
+})();
+</script></body>
 </html>
