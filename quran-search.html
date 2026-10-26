@@ -6,30 +6,225 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#0b1f17">
 <title>NOOR — Qur'an Search</title>
+
 <style>
 *{box-sizing:border-box}
-body{margin:0;padding:14px;background:#080808;color:#edbd50;font-family:Arial,sans-serif}
-h1{text-align:center;margin:20px 0 24px;font-size:28px}
-.tabs{display:flex;gap:5px;width:100%}
-.tab{flex:1;min-width:0;padding:12px 2px;margin:0;border:1px solid #a98736;border-radius:8px;background:#151515;color:#edbd50;font-size:13px}
-.tab.active{background:#edbd50;color:#080808}
-input,select{width:100%;min-width:0;padding:12px 10px;border:1px solid #a98736;border-radius:9px;background:#151515;color:#fff4d6;font-size:16px}
+
+body{
+  margin:0;
+  padding:14px;
+  background:#080808;
+  color:#edbd50;
+  font-family:Arial,sans-serif;
+}
+
+h1{
+  text-align:center;
+  margin:20px 0 24px;
+  font-size:28px;
+}
+
+.tabs{
+  display:flex;
+  gap:5px;
+  width:100%;
+}
+
+.tab{
+  flex:1;
+  min-width:0;
+  padding:12px 2px;
+  margin:0;
+  border:1px solid #a98736;
+  border-radius:8px;
+  background:#151515;
+  color:#edbd50;
+  font-size:13px;
+}
+
+.tab.active{
+  background:#edbd50;
+  color:#080808;
+}
+
+input,select{
+  width:100%;
+  min-width:0;
+  padding:12px 10px;
+  border:1px solid #a98736;
+  border-radius:9px;
+  background:#151515;
+  color:#fff4d6;
+  font-size:16px;
+}
+
 input{margin-top:10px}
-button{cursor:pointer;font-weight:bold}
-.searchrow{display:flex;gap:7px;margin-top:10px;align-items:center}
-.searchrow input{flex:1;margin:0}
-#searchButton{width:88px;flex-shrink:0;padding:12px 4px;border:1px solid #a98736;border-radius:9px;background:#edbd50;color:#080808;font-size:14px}
-#status{text-align:center;color:#d2c9b8;line-height:1.7;margin:16px 0}
-.hint{color:#bdb5a5;font-size:13px;line-height:1.6}
-.result{padding:15px 0;border-bottom:1px solid #40341e}
-.resultHead{color:#edbd50;font-size:14px;line-height:1.8;margin-bottom:9px}
-.arabic{color:#fff4d6;font-family:serif;font-size:27px;line-height:2.1;direction:rtl;text-align:right;overflow-wrap:anywhere}
-mark{color:#080808;background:#edbd50;border-radius:3px;padding:0 2px}
-.result button{width:auto;padding:10px 14px;margin-top:10px;border:1px solid #a98736;border-radius:8px;background:#211b0e;color:#f2c45b}
-.fieldlabel{display:block;margin-top:12px;font-size:14px;color:#edbd50}
-@media(max-width:360px){body{padding:9px}.tab{font-size:11px;padding:11px 1px}#searchButton{width:75px;font-size:12px}.arabic{font-size:25px}}
+
+button{
+  cursor:pointer;
+  font-weight:bold;
+}
+
+button:disabled{
+  opacity:.6;
+  cursor:wait;
+}
+
+.searchrow{
+  display:flex;
+  gap:7px;
+  margin-top:10px;
+  align-items:center;
+}
+
+.searchrow input{
+  flex:1;
+  margin:0;
+}
+
+#searchButton{
+  width:88px;
+  flex-shrink:0;
+  padding:12px 4px;
+  border:1px solid #a98736;
+  border-radius:9px;
+  background:#edbd50;
+  color:#080808;
+  font-size:14px;
+}
+
+#status{
+  text-align:center;
+  color:#d2c9b8;
+  line-height:1.7;
+  margin:16px 0;
+}
+
+.hint{
+  color:#bdb5a5;
+  font-size:13px;
+  line-height:1.6;
+}
+
+.result{
+  padding:15px 0;
+  border-bottom:1px solid #40341e;
+}
+
+.resultHead{
+  color:#edbd50;
+  font-size:14px;
+  line-height:1.8;
+  margin-bottom:9px;
+}
+
+.arabic{
+  color:#fff4d6;
+  font-family:serif;
+  font-size:27px;
+  line-height:2.1;
+  direction:rtl;
+  text-align:right;
+  overflow-wrap:anywhere;
+}
+
+mark{
+  color:#080808;
+  background:#edbd50;
+  border-radius:3px;
+  padding:0 2px;
+}
+
+.result button{
+  width:auto;
+  padding:10px 14px;
+  margin-top:10px;
+  border:1px solid #a98736;
+  border-radius:8px;
+  background:#211b0e;
+  color:#f2c45b;
+}
+
+.fieldlabel{
+  display:block;
+  margin-top:12px;
+  font-size:14px;
+  color:#edbd50;
+}
+
+/* NOOR LIGHT THEME */
+body.noor-light-theme{
+  background:#f5f7f5;
+  color:#26352c;
+}
+
+body.noor-light-theme h1,
+body.noor-light-theme .fieldlabel,
+body.noor-light-theme .resultHead{
+  color:#526b39;
+}
+
+body.noor-light-theme .tab{
+  background:#ffffff;
+  color:#526b39;
+  border-color:#b7c5ad;
+}
+
+body.noor-light-theme .tab.active{
+  background:#526b39;
+  color:#ffffff;
+}
+
+body.noor-light-theme input,
+body.noor-light-theme select{
+  background:#ffffff;
+  color:#222222;
+  border-color:#b7c5ad;
+}
+
+body.noor-light-theme input::placeholder{
+  color:#777777;
+}
+
+body.noor-light-theme #searchButton{
+  background:#526b39;
+  color:#ffffff;
+  border-color:#526b39;
+}
+
+body.noor-light-theme #status,
+body.noor-light-theme .hint{
+  color:#555f55;
+}
+
+body.noor-light-theme .arabic{
+  color:#222222;
+}
+
+body.noor-light-theme .result{
+  border-bottom-color:#d8dfd5;
+}
+
+body.noor-light-theme .result button{
+  background:#edf3e9;
+  color:#40582f;
+  border-color:#b7c5ad;
+}
+
+body.noor-light-theme mark{
+  background:#e3d49b;
+  color:#222222;
+}
+
+@media(max-width:360px){
+  body{padding:9px}
+  .tab{font-size:11px;padding:11px 1px}
+  #searchButton{width:75px;font-size:12px}
+  .arabic{font-size:25px}
+}
 </style>
 </head>
+
 <body>
 
 <h1>🔎 Qur'an Search</h1>
@@ -43,14 +238,18 @@ mark{color:#080808;background:#edbd50;border-radius:3px;padding:0 2px}
 
 <form id="searchForm">
   <div id="singleField">
-    <input id="searchInput" type="search" placeholder="അറബി വാക്ക് നൽകുക" autocomplete="off">
+    <input id="searchInput" type="search"
+      placeholder="അറബി വാക്ക് നൽകുക" autocomplete="off">
   </div>
 
   <div id="ayahFields" hidden>
     <label class="fieldlabel" for="ayahSurah">സൂറത്തിന്റെ പേര് / നമ്പർ</label>
-    <input id="ayahSurah" type="text" placeholder="ഉദാ: البقرة / Al-Baqarah / 2" autocomplete="off">
+    <input id="ayahSurah" type="text"
+      placeholder="ഉദാ: البقرة / Al-Baqarah / 2" autocomplete="off">
+
     <label class="fieldlabel" for="ayahNumber">ആയത്ത് നമ്പർ</label>
-    <input id="ayahNumber" type="number" min="1" step="1" placeholder="ഉദാ: 25">
+    <input id="ayahNumber" type="number" min="1" step="1"
+      placeholder="ഉദാ: 25">
   </div>
 
   <div class="searchrow">
@@ -65,8 +264,33 @@ mark{color:#080808;background:#edbd50;border-radius:3px;padding:0 2px}
 <script>
 'use strict';
 
+/* Apply the theme saved in NOOR Settings */
+function applyNoorTheme(){
+  let theme = 'light';
+
+  try{
+    theme = localStorage.getItem('noor-theme') || 'light';
+  }catch(error){}
+
+  document.body.classList.toggle(
+    'noor-light-theme',
+    theme !== 'dark'
+  );
+}
+
+applyNoorTheme();
+
+window.addEventListener('pageshow', applyNoorTheme);
+
+window.addEventListener('storage', function(event){
+  if(event.key === 'noor-theme' || event.key === null){
+    applyNoorTheme();
+  }
+});
+
 const API = 'https://api.alquran.cloud/v1';
 const $ = id => document.getElementById(id);
+
 let mode = 'word';
 let surahs = [];
 let requestId = 0;
@@ -78,8 +302,13 @@ const hints = {
   page: ['പേജ് നമ്പർ (1–604)','മദീന മുസ്ഹഫിന്റെ പേജ് നമ്പർ നൽകുക.']
 };
 
-function setStatus(text){$('status').textContent=text}
-function clearResults(){$('results').replaceChildren()}
+function setStatus(text){
+  $('status').textContent = text;
+}
+
+function clearResults(){
+  $('results').replaceChildren();
+}
 
 function normalizeArabic(text){
   return String(text)
@@ -95,94 +324,118 @@ function normalizeArabic(text){
 }
 
 async function getData(url){
-  const response=await fetch(url);
-  if(!response.ok)throw new Error('Network error');
-  const json=await response.json();
-  if(json.code!==200||json.data==null)throw new Error('Invalid API response');
+  const response = await fetch(url);
+
+  if(!response.ok){
+    throw new Error('Network error');
+  }
+
+  const json = await response.json();
+
+  if(json.code !== 200 || json.data == null){
+    throw new Error('Invalid API response');
+  }
+
   return json.data;
 }
 
 function addResult(heading,text,meta,highlightQuery=''){
-  const item=document.createElement('div');
-  item.className='result';
+  const item = document.createElement('div');
+  item.className = 'result';
 
-  const head=document.createElement('div');
-  head.className='resultHead';
-  head.textContent=heading;
+  const head = document.createElement('div');
+  head.className = 'resultHead';
+  head.textContent = heading;
   item.appendChild(head);
 
   if(text){
-    const arabic=document.createElement('div');
-    arabic.className='arabic';
-    arabic.lang='ar';
+    const arabic = document.createElement('div');
+    arabic.className = 'arabic';
+    arabic.lang = 'ar';
 
     if(highlightQuery){
-      const chars=Array.from(text);
-      const q=normalizeArabic(highlightQuery);
-      const normalized=[];
-      const mapping=[];
+      const chars = Array.from(text);
+      const q = normalizeArabic(highlightQuery);
+      const normalized = [];
+      const mapping = [];
 
       chars.forEach((ch,i)=>{
-        const n=normalizeArabic(ch);
+        const n = normalizeArabic(ch);
+
         for(const c of Array.from(n)){
           normalized.push(c);
           mapping.push(i);
         }
       });
 
-      const source=normalized.join('');
-      const ranges=[];
-      let pos=0;
+      const source = normalized.join('');
+      const ranges = [];
+      let pos = 0;
 
       if(q){
-        while((pos=source.indexOf(q,pos))!==-1){
-          const start=mapping[pos];
-          const end=mapping[pos+q.length-1]+1;
-          if(start!==undefined&&end!==undefined){
-            const last=ranges[ranges.length-1];
-            if(last&&start<=last[1])last[1]=Math.max(last[1],end);
-            else ranges.push([start,end]);
+        while((pos = source.indexOf(q,pos)) !== -1){
+          const start = mapping[pos];
+          const end = mapping[pos + q.length - 1] + 1;
+
+          if(start !== undefined && end !== undefined){
+            const last = ranges[ranges.length - 1];
+
+            if(last && start <= last[1]){
+              last[1] = Math.max(last[1],end);
+            }else{
+              ranges.push([start,end]);
+            }
           }
-          pos+=Math.max(1,q.length);
+
+          pos += Math.max(1,q.length);
         }
       }
 
       if(!ranges.length){
-        arabic.textContent=text;
+        arabic.textContent = text;
       }else{
-        let cursor=0;
+        let cursor = 0;
+
         ranges.forEach(([start,end])=>{
-          arabic.appendChild(document.createTextNode(chars.slice(cursor,start).join('')));
-          const mark=document.createElement('mark');
-          mark.textContent=chars.slice(start,end).join('');
+          arabic.appendChild(
+            document.createTextNode(chars.slice(cursor,start).join(''))
+          );
+
+          const mark = document.createElement('mark');
+          mark.textContent = chars.slice(start,end).join('');
           arabic.appendChild(mark);
-          cursor=end;
+
+          cursor = end;
         });
-        arabic.appendChild(document.createTextNode(chars.slice(cursor).join('')));
+
+        arabic.appendChild(
+          document.createTextNode(chars.slice(cursor).join(''))
+        );
       }
     }else{
-      arabic.textContent=text;
+      arabic.textContent = text;
     }
 
     item.appendChild(arabic);
   }
 
   if(meta){
-    const details=document.createElement('p');
-    details.className='hint';
-    details.textContent=meta;
+    const details = document.createElement('p');
+    details.className = 'hint';
+    details.textContent = meta;
     item.appendChild(details);
   }
+
   $('results').appendChild(item);
 }
 
 function findSurahs(query){
-  const q=query.trim();
-  const normalized=normalizeArabic(q);
-  const lower=q.toLowerCase();
+  const q = query.trim();
+  const normalized = normalizeArabic(q);
+  const lower = q.toLowerCase();
 
   return surahs.filter(s=>
-    String(s.number)===q ||
+    String(s.number) === q ||
     s.englishName.toLowerCase().includes(lower) ||
     s.englishNameTranslation.toLowerCase().includes(lower) ||
     normalizeArabic(s.name).includes(normalized)
@@ -190,9 +443,15 @@ function findSurahs(query){
 }
 
 async function searchWord(query,id){
-  const data=await getData(API+'/search/'+encodeURIComponent(query)+'/all/quran-uthmani');
-  if(id!==requestId)return;
-  if(!Array.isArray(data.matches))throw new Error('Invalid results');
+  const data = await getData(
+    API + '/search/' + encodeURIComponent(query) + '/all/quran-uthmani'
+  );
+
+  if(id !== requestId) return;
+
+  if(!Array.isArray(data.matches)){
+    throw new Error('Invalid results');
+  }
 
   if(!data.matches.length){
     setStatus('ഫലങ്ങൾ കണ്ടെത്തിയില്ല.');
@@ -201,108 +460,149 @@ async function searchWord(query,id){
 
   data.matches.forEach(m=>{
     addResult(
-      (m.surah?.englishName||'Surah')+' — '+(m.surah?.name||'')+
-      ', ആയത്ത് '+m.numberInSurah,
-      m.text,'',query
+      (m.surah?.englishName || 'Surah') + ' — ' +
+      (m.surah?.name || '') + ', ആയത്ത് ' + m.numberInSurah,
+      m.text,
+      '',
+      query
     );
   });
-  setStatus('കിട്ടിയ ഫലങ്ങൾ: '+data.matches.length);
+
+  setStatus('കിട്ടിയ ഫലങ്ങൾ: ' + data.matches.length);
 }
 
 async function loadSurah(s,id){
-  const data=await getData(API+'/surah/'+s.number+'/quran-uthmani');
-  if(id!==requestId)return;
+  const data = await getData(
+    API + '/surah/' + s.number + '/quran-uthmani'
+  );
 
-  if(!Array.isArray(data.ayahs)||
-     data.ayahs.length!==s.numberOfAyahs||
-     data.ayahs.some((a,i)=>a.numberInSurah!==i+1||!a.text?.trim())){
+  if(id !== requestId) return;
+
+  if(!Array.isArray(data.ayahs) ||
+     data.ayahs.length !== s.numberOfAyahs ||
+     data.ayahs.some((a,i)=>
+       a.numberInSurah !== i + 1 || !a.text?.trim()
+     )){
     throw new Error('Incomplete Surah');
   }
 
   data.ayahs.forEach(a=>
-    addResult(s.englishName+' — ആയത്ത് '+a.numberInSurah,a.text,'')
+    addResult(
+      s.englishName + ' — ആയത്ത് ' + a.numberInSurah,
+      a.text,
+      ''
+    )
   );
-  setStatus('മുഴുവൻ '+data.ayahs.length+' ആയത്തുകൾ ലഭിച്ചു.');
+
+  setStatus('മുഴുവൻ ' + data.ayahs.length + ' ആയത്തുകൾ ലഭിച്ചു.');
 }
 
 async function searchAyah(surahQuery,ayahValue,id){
-  const matches=findSurahs(surahQuery);
+  const matches = findSurahs(surahQuery);
 
-  if(matches.length===0){
+  if(matches.length === 0){
     setStatus('സൂറത്ത് കണ്ടെത്താനായില്ല. അറബി/ഇംഗ്ലീഷ് പേര് അല്ലെങ്കിൽ നമ്പർ പരിശോധിക്കൂ.');
     return;
   }
-  if(matches.length>1){
+
+  if(matches.length > 1){
     setStatus('ഒന്നിലധികം സൂറത്തുകൾ കണ്ടെത്തി. കൂടുതൽ കൃത്യമായ പേര് നൽകൂ.');
+
     matches.forEach(s=>{
-      const b=document.createElement('button');
-      b.type='button';
-      b.textContent=s.number+'. '+s.englishName+' — '+s.name;
-      b.addEventListener('click',()=>runAyahForSurah(s,ayahValue));
+      const b = document.createElement('button');
+      b.type = 'button';
+      b.textContent = s.number + '. ' + s.englishName + ' — ' + s.name;
+
+      b.addEventListener('click',()=>{
+        runAyahForSurah(s,ayahValue,id);
+      });
+
       $('results').appendChild(b);
     });
+
     return;
   }
+
   await runAyahForSurah(matches[0],ayahValue,id);
 }
 
 async function runAyahForSurah(s,ayahValue,id){
-  const n=Number(ayahValue);
-  if(!Number.isInteger(n)||n<1||n>s.numberOfAyahs){
-    setStatus('ഈ സൂറത്തിൽ 1 മുതൽ '+s.numberOfAyahs+' വരെയുള്ള ആയത്ത് നമ്പർ നൽകൂ.');
+  const n = Number(ayahValue);
+
+  if(!Number.isInteger(n) || n < 1 || n > s.numberOfAyahs){
+    setStatus('ഈ സൂറത്തിൽ 1 മുതൽ ' + s.numberOfAyahs + ' വരെയുള്ള ആയത്ത് നമ്പർ നൽകൂ.');
     return;
   }
 
-  const data=await getData(API+'/surah/'+s.number+'/quran-uthmani');
-  if(id!==undefined&&id!==requestId)return;
+  const data = await getData(
+    API + '/surah/' + s.number + '/quran-uthmani'
+  );
 
-  if(!Array.isArray(data.ayahs)||data.ayahs.length!==s.numberOfAyahs){
+  if(id !== undefined && id !== requestId) return;
+
+  if(!Array.isArray(data.ayahs) ||
+     data.ayahs.length !== s.numberOfAyahs){
     throw new Error('Incomplete Surah');
   }
 
-  const ayah=data.ayahs[n-1];
-  if(!ayah||ayah.numberInSurah!==n||!ayah.text?.trim()){
+  const ayah = data.ayahs[n - 1];
+
+  if(!ayah || ayah.numberInSurah !== n || !ayah.text?.trim()){
     throw new Error('Ayah not verified');
   }
 
-  addResult(s.englishName+' — ആയത്ത് '+n,ayah.text,'');
+  addResult(s.englishName + ' — ആയത്ത് ' + n,ayah.text,'');
   setStatus('ആവശ്യപ്പെട്ട ആയത്ത് ലഭിച്ചു.');
 }
 
 async function searchPage(page,id){
-  const data=await getData(API+'/page/'+page+'/quran-uthmani');
-  if(id!==requestId)return;
+  const data = await getData(
+    API + '/page/' + page + '/quran-uthmani'
+  );
 
-  if(data.number!==page||!Array.isArray(data.ayahs)||!data.ayahs.length||
-     data.ayahs.some(a=>!a.text?.trim()||!a.surah)){
+  if(id !== requestId) return;
+
+  if(data.number !== page ||
+     !Array.isArray(data.ayahs) ||
+     !data.ayahs.length ||
+     data.ayahs.some(a=>!a.text?.trim() || !a.surah)){
     throw new Error('Incomplete page');
   }
 
   data.ayahs.forEach(a=>{
     addResult(
-      (a.surah.englishName||'Surah')+' — ആയത്ത് '+a.numberInSurah,
-      a.text,'API പേജ് നമ്പർ '+page
+      (a.surah.englishName || 'Surah') + ' — ആയത്ത് ' + a.numberInSurah,
+      a.text,
+      'API പേജ് നമ്പർ ' + page
     );
   });
-  setStatus('ലഭിച്ച ആയത്തുകൾ: '+data.ayahs.length);
+
+  setStatus('ലഭിച്ച ആയത്തുകൾ: ' + data.ayahs.length);
 }
 
 document.querySelectorAll('.tab').forEach(button=>{
   button.addEventListener('click',()=>{
-    mode=button.dataset.mode;
-    document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active',t===button));
+    mode = button.dataset.mode;
 
-    $('singleField').hidden=mode==='ayah';
-    $('ayahFields').hidden=mode!=='ayah';
-    $('searchInput').value='';
-    $('ayahSurah').value='';
-    $('ayahNumber').value='';
-    $('searchInput').type=mode==='page'?'number':'search';
-    $('searchInput').min=mode==='page'?'1':'';
-    $('searchInput').max=mode==='page'?'604':'';
-    $('searchInput').step=mode==='page'?'1':'';
-    $('searchInput').placeholder=hints[mode][0];
-    $('hint').textContent=hints[mode][1];
+    document.querySelectorAll('.tab').forEach(t=>
+      t.classList.toggle('active',t === button)
+    );
+
+    $('singleField').hidden = mode === 'ayah';
+    $('ayahFields').hidden = mode !== 'ayah';
+
+    $('searchInput').value = '';
+    $('ayahSurah').value = '';
+    $('ayahNumber').value = '';
+
+    $('searchInput').type = mode === 'page' ? 'number' : 'search';
+    $('searchInput').min = mode === 'page' ? '1' : '';
+    $('searchInput').max = mode === 'page' ? '604' : '';
+    $('searchInput').step = mode === 'page' ? '1' : '';
+
+    $('searchInput').placeholder = hints[mode][0];
+    $('hint').textContent = hints[mode][1];
+
     clearResults();
     setStatus('');
   });
@@ -311,78 +611,107 @@ document.querySelectorAll('.tab').forEach(button=>{
 $('searchForm').addEventListener('submit',async event=>{
   event.preventDefault();
 
-  const query=$('searchInput').value.trim();
-  const surahQuery=$('ayahSurah').value.trim();
-  const ayahValue=$('ayahNumber').value.trim();
+  const query = $('searchInput').value.trim();
+  const surahQuery = $('ayahSurah').value.trim();
+  const ayahValue = $('ayahNumber').value.trim();
 
-  if(mode!=='ayah'&&!query)return;
-  if(mode==='ayah'&&(!surahQuery||!ayahValue))return;
+  if(mode !== 'ayah' && !query) return;
+  if(mode === 'ayah' && (!surahQuery || !ayahValue)) return;
 
-  const id=++requestId;
+  const id = ++requestId;
+
   clearResults();
   setStatus('തിരയുന്നു...');
-  $('searchButton').disabled=true;
+  $('searchButton').disabled = true;
 
   try{
-    if(mode==='word'){
+    if(mode === 'word'){
       await searchWord(query,id);
-    }else if(mode==='surah'){
-      const found=findSurahs(query);
+
+    }else if(mode === 'surah'){
+      const found = findSurahs(query);
+
       if(!found.length){
         setStatus('സൂറത്ത് കണ്ടെത്താനായില്ല. അറബി/ഇംഗ്ലീഷ് പേര് അല്ലെങ്കിൽ നമ്പർ പരിശോധിക്കൂ.');
       }else{
         found.forEach(s=>{
-          const row=document.createElement('div');
-          row.className='result';
-          const name=document.createElement('div');
-          name.className='resultHead';
-          name.textContent=s.number+'. '+s.englishName+' — '+s.name;
-          const button=document.createElement('button');
-          button.type='button';
-          button.textContent='സൂറത്ത് തുറക്കുക';
+          const row = document.createElement('div');
+          row.className = 'result';
+
+          const name = document.createElement('div');
+          name.className = 'resultHead';
+          name.textContent = s.number + '. ' + s.englishName + ' — ' + s.name;
+
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = 'സൂറത്ത് തുറക്കുക';
+
           button.addEventListener('click',async()=>{
-            const next=++requestId;
+            const next = ++requestId;
+
             clearResults();
             setStatus('സൂറത്ത് ലഭിക്കുന്നു...');
-            try{await loadSurah(s,next)}
-            catch(e){if(next===requestId)setStatus('സൂറത്ത് ലഭിച്ചില്ല. Internet പരിശോധിക്കൂ.')}
+
+            try{
+              await loadSurah(s,next);
+            }catch(e){
+              if(next === requestId){
+                setStatus('സൂറത്ത് ലഭിച്ചില്ല. Internet പരിശോധിക്കൂ.');
+              }
+            }
           });
+
           row.append(name,button);
           $('results').appendChild(row);
         });
-        setStatus('കിട്ടിയ സൂറത്തുകൾ: '+found.length);
+
+        setStatus('കിട്ടിയ സൂറത്തുകൾ: ' + found.length);
       }
-    }else if(mode==='ayah'){
+
+    }else if(mode === 'ayah'){
       await searchAyah(surahQuery,ayahValue,id);
+
     }else{
-      const page=Number(query);
-      if(!Number.isInteger(page)||page<1||page>604){
+      const page = Number(query);
+
+      if(!Number.isInteger(page) || page < 1 || page > 604){
         setStatus('1 മുതൽ 604 വരെയുള്ള പേജ് നമ്പർ നൽകൂ.');
       }else{
         await searchPage(page,id);
       }
     }
+
   }catch(error){
-    if(id===requestId){
+    if(id === requestId){
       clearResults();
       setStatus('തിരയൽ പൂർത്തിയാക്കാനായില്ല. Internet പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കൂ.');
     }
+
   }finally{
-    if(id===requestId)$('searchButton').disabled=false;
+    if(id === requestId){
+      $('searchButton').disabled = false;
+    }
   }
 });
 
 async function init(){
   try{
-    const data=await getData(API+'/surah');
-    if(!Array.isArray(data)||data.length!==114)throw new Error('Invalid list');
-    surahs=data;
+    const data = await getData(API + '/surah');
+
+    if(!Array.isArray(data) || data.length !== 114){
+      throw new Error('Invalid list');
+    }
+
+    surahs = data;
     setStatus('');
+
   }catch(e){
     setStatus('സൂറത്ത് പട്ടിക ലഭിച്ചില്ല. Internet പരിശോധിക്കൂ.');
   }
 }
+
 init();
 </script>
+
 </body>
 </html>
