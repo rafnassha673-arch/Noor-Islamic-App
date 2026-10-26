@@ -18,6 +18,7 @@ body {
   background: #080808;
   color: #edbd50;
   font-family: Arial, sans-serif;
+  transition: background-color 0.2s, color 0.2s;
 }
 
 h1 {
@@ -107,6 +108,39 @@ select:disabled {
   white-space: nowrap;
 }
 
+/* LIGHT THEME */
+body.noor-light-theme {
+  background: #f5f7f5 !important;
+  color: #111111 !important;
+}
+
+body.noor-light-theme h1,
+body.noor-light-theme #surahTitle,
+body.noor-light-theme #status {
+  color: #111111 !important;
+}
+
+body.noor-light-theme #quran,
+body.noor-light-theme #quran .ayah,
+body.noor-light-theme #quran .ayah span {
+  color: #111111 !important;
+}
+
+body.noor-light-theme .ayah {
+  border-bottom-color: #d8d8d0;
+}
+
+body.noor-light-theme .ayahNo {
+  color: #72551b !important;
+}
+
+body.noor-light-theme select,
+body.noor-light-theme button {
+  background: #ffffff !important;
+  color: #111111 !important;
+  border-color: #b99a50;
+}
+
 @media (max-width: 360px) {
   body {
     padding: 12px;
@@ -115,13 +149,6 @@ select:disabled {
   #surahTitle {
     font-size: 22px;
   }
-}
-body.noor-light-theme h1,
-body.noor-light-theme h2,
-body.noor-light-theme p,
-body.noor-light-theme #verses,
-body.noor-light-theme #verses * {
-  color: #000000 !important;
 }
 </style>
 </head>
@@ -332,29 +359,22 @@ async function loadSurah() {
 
 picker.addEventListener('change', loadSurah);
 
+/* Apply the theme saved in NOOR Settings */
+(function applyNoorTheme() {
+  let theme = 'light';
+
+  try {
+    theme = localStorage.getItem('noor-theme') || 'light';
+  } catch (error) {}
+
+  document.body.classList.toggle(
+    'noor-light-theme',
+    theme !== 'dark'
+  );
+})();
+
 loadSurahList();
 </script>
 
-<script>
-(function () {
-  function applyNoorTheme() {
-    let theme = "light";
-    try {
-      theme = localStorage.getItem("noor-theme") || "light";
-    } catch (e) {}
-
-    document.body.style.backgroundColor =
-      theme === "dark" ? "#080808" : "#f5f7f5";
-
-    document.body.style.color =
-      theme === "dark" ? "#eddb50" : "#000000";
-    document.body.classList.toggle(
-  "noor-light-theme",
-  theme !== "dark"
-);
-  }
-
-  applyNoorTheme();
-})();
-</script></body>
+</body>
 </html>
