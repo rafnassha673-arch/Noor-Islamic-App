@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "noor-islamic-app-v5";
+const CACHE_NAME = "noor-islamic-app-v6";
 
 const APP_FILES = [
   "./",
@@ -7,6 +7,7 @@ const APP_FILES = [
   "./manifest.json",
   "./quran-reading.html",
   "./quran-search.html",
+  "./quran-video.html",
   "./settings.html",
   "./about.html"
 ];
