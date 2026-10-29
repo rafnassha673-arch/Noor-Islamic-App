@@ -18,12 +18,24 @@
   --text:#f8f3e8;
 }
 *{box-sizing:border-box}
+
+html{
+  min-height:100%;
+  overflow-x:hidden;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+}
+
 body{
   margin:0;
+  min-height:100vh;
+  overflow-x:hidden;
+  overflow-y:auto;
   background:radial-gradient(ellipse at top,#211b0d 0,#080808 48%);
   color:var(--text);
   font-family:system-ui,-apple-system,Segoe UI,sans-serif;
 }
+
 button,select,input,textarea{font:inherit}
 button,select{
   background:var(--control-bg);color:var(--text);
@@ -33,6 +45,7 @@ button,select{
 button{cursor:pointer;font-weight:650}
 button.primary{background:var(--gold);color:#171108;border-color:var(--gold)}
 button:disabled{opacity:.4}
+
 header{
   position:relative;text-align:center;
   padding:25px 75px 20px;border-bottom:1px solid var(--line);
@@ -40,6 +53,7 @@ header{
 .logo{letter-spacing:6px;font-size:12px;color:var(--gold);font-weight:800}
 .brand{font-size:30px;margin:7px 0 2px}
 .sub{color:var(--muted);font-size:13px}
+
 .settings-link,.about-link{
   position:absolute;top:18px;
   color:var(--gold);font-size:24px;
@@ -49,7 +63,14 @@ header{
 }
 .settings-link{right:14px}
 .about-link{right:55px}
-.wrap{max-width:780px;margin:auto;padding:16px 14px 95px}
+
+.wrap{
+  max-width:780px;
+  margin:0 auto;
+  padding:16px 14px 125px;
+  min-height:calc(100vh - 100px);
+}
+
 .panel{
   background:var(--panel);border:1px solid var(--line);
   border-radius:18px;padding:16px;margin-bottom:14px;
@@ -65,7 +86,9 @@ header{
   position:fixed;bottom:0;left:0;right:0;
   display:flex;gap:5px;overflow-x:auto;
   background:var(--nav-bg);border-top:1px solid var(--line);
-  padding:8px max(8px,calc((100vw - 780px)/2));z-index:10;
+  padding:8px max(8px,calc((100vw - 780px)/2));
+  z-index:10;
+  padding-bottom:max(8px,env(safe-area-inset-bottom));
 }
 .nav button{
   min-width:76px;flex:1;border-color:transparent;
@@ -80,14 +103,17 @@ header{
 }
 .hero h2{font-size:23px;margin:0 0 7px}
 .hero p{margin:0 0 16px;color:var(--muted);line-height:1.6;font-size:14px}
+
 .quick{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .tile{
   border:1px solid var(--line);border-radius:14px;
   padding:14px;background:var(--tile-bg);
   text-align:left;color:var(--text);
+  min-height:100px;
 }
 .tile strong{display:block;color:var(--gold);margin:4px 0}
 .tile span{font-size:12px;color:var(--muted)}
+
 .arabic{
   font-family:"Noto Naskh Arabic","Amiri",serif;
   font-size:27px;line-height:2;text-align:right;
@@ -103,6 +129,7 @@ header{
 .listbtn{text-align:left;margin:5px 0}
 .quizopt{margin:5px 0;text-align:left}
 .hidden{display:none!important}
+
 textarea{
   width:100%;min-height:100px;border-radius:11px;
   border:1px solid var(--line);background:var(--control-bg);
@@ -164,8 +191,8 @@ body.noor-light-theme .about-link{color:#526b39}
 }
 </style>
 </head>
-<body>
 
+<body>
 <header>
   <div class="logo">NOOR • نور</div>
   <div class="brand">Islamic Learning</div>
@@ -188,9 +215,10 @@ body.noor-light-theme .about-link{color:#526b39}
     <button class="tile" onclick="showPage('quran')">📖<strong>Al-Qur’an</strong><span>30 Juz · 114 Surahs · 3 reciters</span></button>
     <button class="tile" onclick="showPage('askai')">🤖<strong>Ask AI</strong><span>Ask a question in ChatGPT</span></button>
     <button class="tile" onclick="showPage('bookmarks')">🔖<strong>Bookmarks</strong><span>Save ayat and return to them</span></button>
-    <button class="tile" onclick="window.location.href='./quran-search.html'">🔎 Qur’an Search</button>
+    <button class="tile" onclick="window.location.href='./quran-search.html'">🔎<strong>Qur’an Search</strong><span>Search ayat and Surahs</span></button>
     <button class="tile" onclick="window.location.href='./quran-video.html'">🎬<strong>Quran Video</strong><span>Watch recitations of all 114 Surahs</span></button>
     <button class="tile" onclick="window.location.href='./quran-reading.html'">📖<strong>Qur’an Reading</strong><span>Read the Qur’an in Arabic</span></button>
+    <button class="tile" onclick="openMajlisunnoor()">🌙<strong>MAJLISUNNOOR</strong><span>Open Majlisunnoor PDF</span></button>
   </div>
 </section>
 
@@ -232,7 +260,7 @@ body.noor-light-theme .about-link{color:#526b39}
 <section id="askai" class="page hidden">
   <div class="panel">
     <h2 class="heading">🤖 Ask AI</h2>
-    <p class="note">Type a question and open ChatGPT with your prompt. This HTML app does not include a built-in GPT model; ChatGPT opens separately.</p>
+    <p class="note">Type a question and open ChatGPT with your prompt. This app opens ChatGPT separately.</p>
     <label for="aiQuestion" style="display:block;color:var(--gold);font-size:12px;margin:10px 0 7px">YOUR QUESTION</label>
     <textarea id="aiQuestion" placeholder="Ask about a Qur’an ayah, meaning, recitation, or how to use NOOR…"></textarea>
     <button class="primary" style="margin-top:10px" onclick="askChatGPT()">Ask in ChatGPT ↗</button>
@@ -255,7 +283,7 @@ body.noor-light-theme .about-link{color:#526b39}
   <button data-page="quran" onclick="showPage('quran')">📖<br>Qur’an</button>
   <button data-page="askai" onclick="showPage('askai')">🤖<br>Ask AI</button>
   <button data-page="bookmarks" onclick="showPage('bookmarks')">🔖<br>Bookmarks</button>
-  <button data-page="quran-video" onclick="window.location.href='./quran-video.html'">🎬<br>Quran Video</button>
+  <button onclick="window.location.href='./quran-video.html'">🎬<br>Quran Video</button>
 </nav>
 
 <script>
@@ -279,6 +307,11 @@ function showPage(id){
   document.querySelectorAll('.nav button').forEach(b=>b.classList.toggle('active',b.dataset.page===id));
   if(id==='bookmarks')renderBookmarks();
   window.scrollTo({top:0,behavior:'smooth'});
+}
+
+/* MAJLISUNNOOR PDF: add the PDF file in the repository and update this filename. */
+function openMajlisunnoor(){
+  window.location.href='./majlisunnoor.pdf';
 }
 
 $('browse').addEventListener('change',fillOptions);
@@ -343,7 +376,7 @@ async function loadPassage(){
     $('qstatus').textContent=`${currentType==='juz'?'Juz':'Surah'} ${currentNumber} loaded • ${loaded.length} ayat. Tap Play to listen.`;
   }catch(e){
     $('qstatus').textContent='Could not load content. Check internet connection and try again. ('+e.message+')';
-    $('verses').innerHTML='<p class="note">Some networks or browsers may block online requests. Try again in Chrome with internet access.</p>';
+    $('verses').innerHTML='<p class="note">Could not load Qur’an text. Check your internet connection and try again.</p>';
   }finally{
     $('load').disabled=false;
   }
@@ -393,7 +426,7 @@ function renderVerses(){
         next.play().then(()=>{
           next.closest('.verse').scrollIntoView({behavior:'smooth',block:'center'});
         }).catch(()=>{
-          $('qstatus').textContent='Browser stopped automatic playback. Tap Play on the next ayah to continue.';
+          $('qstatus').textContent='Tap Play on the next ayah to continue.';
         });
       }else{
         $('qstatus').textContent='Selected passage finished. Choose another Juz or Surah.';
