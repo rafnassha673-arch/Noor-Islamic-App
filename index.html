@@ -397,7 +397,7 @@ textarea {
 
     <div class="quick">
 
-      <button class="tile" onclick="showPage('asma')">
+      <button class="tile" onclick="openTool('asma-al-husna.html')">
         🌙
         <strong>ASMA AL HUSNA</strong>
         <span>أسماء الله الحسنى · 99 Names of Allah</span>
@@ -410,17 +410,6 @@ textarea {
       </button>
 
     </div>
-  </div>
-</section>
-
-<!-- ASMA AL HUSNA -->
-<section id="asma" class="page hidden">
-  <div class="panel">
-    <h2 class="heading">🌙 ASMA AL HUSNA</h2>
-    <p class="arabic">أَسْمَاءُ اللَّهِ الْحُسْنَى</p>
-    <p class="note">The 99 Beautiful Names of Allah.</p>
-    <p class="note">Content will be added soon.</p>
-    <button onclick="showPage('more')">← Back to MORE</button>
   </div>
 </section>
 
@@ -463,10 +452,8 @@ function showPage(id) {
     p.classList.toggle('hidden', p.id !== id);
   });
 
-  const navPage = ['asma','haddad'].includes(id) ? 'more' : id;
-
   document.querySelectorAll('.nav button').forEach(b => {
-    b.classList.toggle('active', b.dataset.page === navPage);
+    b.classList.toggle('active', b.dataset.page === id);
   });
 
   if (id === 'bookmarks') renderBookmarks();
