@@ -1,0 +1,491 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080808">
+<title>ASMA AL HUSNA | NOOR</title>
+
+<style>
+:root {
+  --bg:#080808;
+  --panel:#151515;
+  --gold:#dfba61;
+  --cream:#f8f3e8;
+  --muted:#aaa;
+  --line:#39342a;
+}
+* { box-sizing:border-box; }
+
+body {
+  margin:0;
+  background:radial-gradient(ellipse at top,#211b0d 0,#080808 55%);
+  color:var(--cream);
+  font-family:system-ui,sans-serif;
+  min-height:100vh;
+}
+
+header {
+  text-align:center;
+  padding:23px 15px 18px;
+  border-bottom:1px solid var(--line);
+}
+.logo {
+  color:var(--gold);
+  font-size:12px;
+  font-weight:800;
+  letter-spacing:5px;
+}
+h1 {
+  color:var(--gold);
+  font-size:25px;
+  margin:10px 0 4px;
+}
+.subtitle {
+  color:var(--muted);
+  font-size:12px;
+}
+
+.container {
+  max-width:760px;
+  margin:auto;
+  padding:16px 13px 35px;
+}
+
+button,input {
+  font:inherit;
+}
+button {
+  cursor:pointer;
+}
+.back {
+  width:100%;
+  padding:12px;
+  background:#151515;
+  color:var(--gold);
+  border:1px solid var(--line);
+  border-radius:12px;
+  font-weight:700;
+  margin-bottom:15px;
+}
+
+.controls {
+  background:#151515;
+  border:1px solid var(--line);
+  border-radius:15px;
+  padding:13px;
+  margin-bottom:16px;
+}
+
+.search {
+  width:100%;
+  padding:13px;
+  background:#080808;
+  color:var(--cream);
+  border:1px solid #5c4b29;
+  border-radius:11px;
+  outline:none;
+  font-size:14px;
+}
+.search:focus {
+  border-color:var(--gold);
+}
+
+.control-row {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  margin-top:13px;
+  flex-wrap:wrap;
+}
+.control-row span {
+  font-size:12px;
+  color:var(--muted);
+}
+.font-controls {
+  display:flex;
+  align-items:center;
+  gap:8px;
+}
+.font-controls button {
+  width:34px;
+  height:34px;
+  border:1px solid #5c4b29;
+  border-radius:9px;
+  background:#0b0b0b;
+  color:var(--gold);
+  font-weight:800;
+  font-size:17px;
+}
+
+.info {
+  display:flex;
+  justify-content:space-between;
+  color:var(--muted);
+  font-size:12px;
+  margin:0 3px 12px;
+}
+
+.grid {
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:9px;
+}
+
+.name-card {
+  min-width:0;
+  min-height:105px;
+  padding:10px 5px;
+  background:linear-gradient(145deg,#171717,#101010);
+  border:1px solid var(--line);
+  border-radius:13px;
+  color:var(--cream);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+  align-items:center;
+  gap:9px;
+  transition:background .2s,border-color .2s;
+}
+
+.name-card:active {
+  transform:scale(.97);
+}
+
+.name-card.selected {
+  background:linear-gradient(145deg,#392c12,#211a0c);
+  border:1px solid var(--gold);
+  box-shadow:0 0 12px #dfba6130;
+}
+
+.number {
+  font-size:11px;
+  color:var(--gold);
+  font-weight:750;
+}
+
+.arabic {
+  direction:rtl;
+  font-family:"Noto Naskh Arabic","Amiri",serif;
+  font-size:25px;
+  line-height:1.8;
+  text-align:center;
+  white-space:nowrap;
+}
+
+.selected .arabic {
+  color:var(--gold);
+}
+
+.empty {
+  display:none;
+  text-align:center;
+  padding:35px 10px;
+  color:var(--muted);
+  font-size:14px;
+}
+
+.footer {
+  text-align:center;
+  color:#777;
+  font-size:11px;
+  padding:22px 10px;
+}
+
+@media(max-width:360px) {
+  .grid { gap:6px; }
+  .name-card { min-height:95px; }
+  .arabic { font-size:22px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+  <div class="logo">NOOR • نور</div>
+  <h1>ASMA AL HUSNA</h1>
+  <div class="subtitle">الأَسْمَاءُ الْحُسْنَى</div>
+</header>
+
+<main class="container">
+
+  <button class="back" onclick="goBack()">
+    ← Back to MORE
+  </button>
+
+  <div class="controls">
+
+    <input
+      id="search"
+      class="search"
+      type="search"
+      placeholder="Search Arabic name or number..."
+      autocomplete="off"
+    >
+
+    <div class="control-row">
+      <span>Arabic Font Size</span>
+
+      <div class="font-controls">
+        <button onclick="changeFont(-2)" aria-label="Decrease font size">−</button>
+        <span id="fontValue">25 px</span>
+        <button onclick="changeFont(2)" aria-label="Increase font size">+</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="info">
+    <span id="resultCount">99 Names</span>
+    <span id="selectedCount">0 Selected</span>
+  </div>
+
+  <div id="nameGrid" class="grid"></div>
+
+  <div id="empty" class="empty">
+    No names found.
+  </div>
+
+  <div class="footer">
+    NOOR ISLAMIC • أسماء الله الحسنى
+  </div>
+
+</main>
+
+<script>
+
+/*
+  Commonly circulated 99-name enumeration.
+  Numbering and inclusion can differ among scholarly lists.
+*/
+
+const names = [
+"الرَّحْمَٰنُ",
+"الرَّحِيمُ",
+"الْمَلِكُ",
+"الْقُدُّوسُ",
+"السَّلَامُ",
+"الْمُؤْمِنُ",
+"الْمُهَيْمِنُ",
+"الْعَزِيزُ",
+"الْجَبَّارُ",
+"الْمُتَكَبِّرُ",
+"الْخَالِقُ",
+"الْبَارِئُ",
+"الْمُصَوِّرُ",
+"الْغَفَّارُ",
+"الْقَهَّارُ",
+"الْوَهَّابُ",
+"الرَّزَّاقُ",
+"الْفَتَّاحُ",
+"الْعَلِيمُ",
+"الْقَابِضُ",
+"الْبَاسِطُ",
+"الْخَافِضُ",
+"الرَّافِعُ",
+"الْمُعِزُّ",
+"الْمُذِلُّ",
+"السَّمِيعُ",
+"الْبَصِيرُ",
+"الْحَكَمُ",
+"الْعَدْلُ",
+"اللَّطِيفُ",
+"الْخَبِيرُ",
+"الْحَلِيمُ",
+"الْعَظِيمُ",
+"الْغَفُورُ",
+"الشَّكُورُ",
+"الْعَلِيُّ",
+"الْكَبِيرُ",
+"الْحَفِيظُ",
+"الْمُقِيتُ",
+"الْحَسِيبُ",
+"الْجَلِيلُ",
+"الْكَرِيمُ",
+"الرَّقِيبُ",
+"الْمُجِيبُ",
+"الْوَاسِعُ",
+"الْحَكِيمُ",
+"الْوَدُودُ",
+"الْمَجِيدُ",
+"الْبَاعِثُ",
+"الشَّهِيدُ",
+"الْحَقُّ",
+"الْوَكِيلُ",
+"الْقَوِيُّ",
+"الْمَتِينُ",
+"الْوَلِيُّ",
+"الْحَمِيدُ",
+"الْمُحْصِي",
+"الْمُبْدِئُ",
+"الْمُعِيدُ",
+"الْمُحْيِي",
+"الْمُمِيتُ",
+"الْحَيُّ",
+"الْقَيُّومُ",
+"الْوَاجِدُ",
+"الْمَاجِدُ",
+"الْوَاحِدُ",
+"الصَّمَدُ",
+"الْقَادِرُ",
+"الْمُقْتَدِرُ",
+"الْمُقَدِّمُ",
+"الْمُؤَخِّرُ",
+"الْأَوَّلُ",
+"الْآخِرُ",
+"الظَّاهِرُ",
+"الْبَاطِنُ",
+"الْوَالِي",
+"الْمُتَعَالِي",
+"الْبَرُّ",
+"التَّوَّابُ",
+"الْمُنْتَقِمُ",
+"الْعَفُوُّ",
+"الرَّؤُوفُ",
+"مَالِكُ الْمُلْكِ",
+"ذُو الْجَلَالِ وَالْإِكْرَامِ",
+"الْمُقْسِطُ",
+"الْجَامِعُ",
+"الْغَنِيُّ",
+"الْمُغْنِي",
+"الْمَانِعُ",
+"الضَّارُّ",
+"النَّافِعُ",
+"النُّورُ",
+"الْهَادِي",
+"الْبَدِيعُ",
+"الْبَاقِي",
+"الْوَارِثُ",
+"الرَّشِيدُ",
+"الصَّبُورُ"
+];
+
+const grid = document.getElementById("nameGrid");
+const search = document.getElementById("search");
+const empty = document.getElementById("empty");
+
+let fontSize = 25;
+let selected = new Set();
+
+try {
+  selected = new Set(
+    JSON.parse(localStorage.getItem("noorAsmaSelected") || "[]")
+  );
+} catch(e) {
+  selected = new Set();
+}
+
+function saveSelected() {
+  localStorage.setItem(
+    "noorAsmaSelected",
+    JSON.stringify([...selected])
+  );
+  updateSelectedCount();
+}
+
+function updateSelectedCount() {
+  document.getElementById("selectedCount").textContent =
+    selected.size + " Selected";
+}
+
+function renderNames(filter = "") {
+  grid.innerHTML = "";
+
+  const query = filter.trim().toLowerCase();
+
+  let count = 0;
+
+  names.forEach((name,index) => {
+    const number = index + 1;
+
+    const normalized = name
+      .replace(/[\u064B-\u065F\u0670\u0640]/g,"")
+      .replace(/[أإآٱ]/g,"ا");
+
+    const normalizedQuery = query
+      .replace(/[\u064B-\u065F\u0670\u0640]/g,"")
+      .replace(/[أإآٱ]/g,"ا");
+
+    const matches =
+      !query ||
+      String(number).includes(query) ||
+      name.toLowerCase().includes(query) ||
+      normalized.includes(normalizedQuery);
+
+    if (!matches) return;
+
+    count++;
+
+    const card = document.createElement("button");
+    card.type = "button";
+    card.className = "name-card";
+
+    if (selected.has(number)) {
+      card.classList.add("selected");
+    }
+
+    const num = document.createElement("span");
+    num.className = "number";
+    num.textContent = String(number).padStart(2,"0");
+
+    const arabic = document.createElement("span");
+    arabic.className = "arabic";
+    arabic.textContent = name;
+    arabic.style.fontSize = fontSize + "px";
+
+    card.append(num,arabic);
+
+    card.addEventListener("click",() => {
+      if (selected.has(number)) {
+        selected.delete(number);
+      } else {
+        selected.add(number);
+      }
+
+      card.classList.toggle("selected",selected.has(number));
+      saveSelected();
+    });
+
+    grid.appendChild(card);
+  });
+
+  document.getElementById("resultCount").textContent =
+    count + (count === 1 ? " Name" : " Names");
+
+  empty.style.display = count ? "none" : "block";
+
+  updateSelectedCount();
+}
+
+function changeFont(amount) {
+  fontSize = Math.max(18,Math.min(42,fontSize + amount));
+
+  document.getElementById("fontValue").textContent =
+    fontSize + " px";
+
+  document.querySelectorAll(".arabic").forEach(el => {
+    el.style.fontSize = fontSize + "px";
+  });
+}
+
+search.addEventListener("input",() => {
+  renderNames(search.value);
+});
+
+function goBack() {
+  if (document.referrer &&
+      new URL(document.referrer).origin === location.origin) {
+    history.back();
+  } else {
+    location.href = "./index.html";
+  }
+}
+
+renderNames();
+
+</script>
+</body>
+</html>
