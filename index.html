@@ -5,6 +5,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#080808">
+<link rel="manifest" href="./manifest.json">
 <title>NOOR — Islamic Learning</title>
 
 <style>
@@ -17,6 +18,7 @@
   --cream:#f8f3e8;
 }
 * { box-sizing:border-box; }
+
 html {
   min-height:100%;
   overflow-y:auto;
@@ -49,6 +51,7 @@ button.primary {
   border-color:var(--gold);
 }
 button:disabled { opacity:.4; cursor:not-allowed; }
+
 header {
   text-align:center;
   padding:25px 16px 20px;
@@ -62,6 +65,7 @@ header {
 }
 .brand { font-size:30px; margin:7px 0 2px; }
 .sub { color:var(--muted); font-size:13px; }
+
 .wrap {
   max-width:780px;
   margin:auto;
@@ -99,6 +103,7 @@ header {
   margin:0 0 7px;
 }
 .wide { grid-column:1/-1; }
+
 .nav {
   position:fixed;
   bottom:0;
@@ -125,6 +130,7 @@ header {
   border-color:#715c2c;
   color:var(--gold);
 }
+
 .hero {
   border:1px solid #5b4928;
   background:linear-gradient(130deg,#211a0b,#111 70%);
@@ -157,6 +163,7 @@ header {
   margin:4px 0;
 }
 .tile span { font-size:12px; color:var(--muted); }
+
 .arabic {
   font-family:"Noto Naskh Arabic","Amiri",serif;
   font-size:27px;
@@ -187,6 +194,7 @@ header {
   min-height:18px;
 }
 .hidden { display:none!important; }
+
 textarea {
   width:100%;
   min-height:100px;
@@ -205,6 +213,7 @@ textarea {
   color:var(--gold);
   margin:0 4px 5px 0;
 }
+
 @media(max-width:440px) {
   .grid { grid-template-columns:1fr; }
   .wide { grid-column:auto; }
@@ -216,6 +225,7 @@ textarea {
 </head>
 
 <body>
+
 <header>
   <div class="logo">NOOR • نور</div>
   <div class="brand">Islamic Learning</div>
@@ -224,15 +234,20 @@ textarea {
 
 <main class="wrap">
 
+<!-- HOME -->
 <section id="home" class="page">
+
   <div class="hero">
     <span class="pill">BLACK & GOLD EDITION</span>
     <h2>Assalamu Alaikum 🤍</h2>
     <p>Your Qur’an reading and recitation space. Choose a Juz or Surah, select a reciter, and listen with automatic continuation where supported.</p>
-    <button class="primary" onclick="showPage('quran')">Open Qur’an →</button>
+    <button class="primary" onclick="showPage('quran')">
+      Open Qur’an →
+    </button>
   </div>
 
   <div class="quick">
+
     <button class="tile" onclick="showPage('quran')">
       📖<strong>Al-Qur’an</strong>
       <span>30 Juz · 114 Surahs · 3 reciters</span>
@@ -272,9 +287,11 @@ textarea {
       📜<strong>MAJLISUNNOOR</strong>
       <span>Read all 22 pages in order</span>
     </button>
+
   </div>
 </section>
 
+<!-- QURAN -->
 <section id="quran" class="page hidden">
   <div class="panel">
     <h2 class="heading">📖 Al-Qur’an Al-Kareem</h2>
@@ -311,16 +328,21 @@ textarea {
 
   <div class="panel">
     <h3 class="heading">Recitation & Ayat</h3>
-    <div id="verses"><p class="note">Your selected passage will appear here.</p></div>
+    <div id="verses">
+      <p class="note">Your selected passage will appear here.</p>
+    </div>
   </div>
 </section>
 
+<!-- MAJLISUNNOOR -->
 <section id="majlis" class="page hidden">
   <div class="panel">
     <h2 class="heading">📜 MAJLISUNNOOR</h2>
     <p class="note">Use Previous and Next to read all pages in the uploaded order.</p>
 
-    <div class="note" id="majlisPageNumber" style="text-align:center;margin:8px 0">1 / 22</div>
+    <div class="note" id="majlisPageNumber" style="text-align:center;margin:8px 0">
+      1 / 22
+    </div>
 
     <img id="majlisImage"
       src="./majlisunnoor/Screenshot_20261029_213525.jpg"
@@ -332,23 +354,33 @@ textarea {
       <button id="majlisNext" class="primary" onclick="nextMajlisPage()">Next →</button>
     </div>
 
-    <button style="margin-top:9px" onclick="showPage('home')">⌂ Back to Home</button>
+    <button style="margin-top:9px" onclick="showPage('home')">
+      ⌂ Back to Home
+    </button>
   </div>
 </section>
 
+<!-- ASK AI -->
 <section id="askai" class="page hidden">
   <div class="panel">
     <h2 class="heading">🤖 Ask AI</h2>
     <p class="note">Type a question and open ChatGPT with your prompt. ChatGPT opens separately.</p>
 
-    <label for="aiQuestion" style="display:block;color:var(--gold);font-size:12px;margin:10px 0 7px">YOUR QUESTION</label>
+    <label for="aiQuestion" style="display:block;color:var(--gold);font-size:12px;margin:10px 0 7px">
+      YOUR QUESTION
+    </label>
+
     <textarea id="aiQuestion" placeholder="Ask about a Qur’an ayah, meaning, recitation, or how to use NOOR…"></textarea>
 
-    <button class="primary" style="margin-top:10px" onclick="askChatGPT()">Ask in ChatGPT ↗</button>
+    <button class="primary" style="margin-top:10px" onclick="askChatGPT()">
+      Ask in ChatGPT ↗
+    </button>
+
     <p class="note">For religious rulings and hadith grading, verify answers with trusted scholars and reliable sources.</p>
   </div>
 </section>
 
+<!-- BOOKMARKS -->
 <section id="bookmarks" class="page hidden">
   <div class="panel">
     <h2 class="heading">🔖 Bookmarks</h2>
@@ -357,25 +389,84 @@ textarea {
   </div>
 </section>
 
+<!-- MORE -->
+<section id="more" class="page hidden">
+  <div class="panel">
+    <h2 class="heading">✨ MORE</h2>
+    <p class="note">Explore more Islamic resources and daily wirds.</p>
+
+    <div class="quick">
+
+      <button class="tile" onclick="showPage('asma')">
+        🌙
+        <strong>ASMA AL HUSNA</strong>
+        <span>أسماء الله الحسنى · 99 Names of Allah</span>
+      </button>
+
+      <button class="tile" onclick="showPage('haddad')">
+        📿
+        <strong>HADDAD RATHIB</strong>
+        <span>راتب الحداد · Daily Wird</span>
+      </button>
+
+    </div>
+  </div>
+</section>
+
+<!-- ASMA AL HUSNA -->
+<section id="asma" class="page hidden">
+  <div class="panel">
+    <h2 class="heading">🌙 ASMA AL HUSNA</h2>
+    <p class="arabic">أَسْمَاءُ اللَّهِ الْحُسْنَى</p>
+    <p class="note">The 99 Beautiful Names of Allah.</p>
+    <p class="note">Content will be added soon.</p>
+    <button onclick="showPage('more')">← Back to MORE</button>
+  </div>
+</section>
+
+<!-- HADDAD RATHIB -->
+<section id="haddad" class="page hidden">
+  <div class="panel">
+    <h2 class="heading">📿 HADDAD RATHIB</h2>
+    <p class="arabic">رَاتِبُ الْحَدَّادِ</p>
+    <p class="note">A dedicated reading space for Haddad Rathib.</p>
+    <p class="note">Content will be added soon.</p>
+    <button onclick="showPage('more')">← Back to MORE</button>
+  </div>
+</section>
+
 </main>
 
+<!-- BOTTOM NAVIGATION -->
 <nav class="nav">
-  <button class="active" data-page="home" onclick="showPage('home')">⌂<br>Home</button>
-  <button data-page="quran" onclick="showPage('quran')">📖<br>Qur’an</button>
-  <button data-page="askai" onclick="showPage('askai')">🤖<br>Ask AI</button>
-  <button data-page="bookmarks" onclick="showPage('bookmarks')">🔖<br>Bookmarks</button>
+
+  <button class="active" data-page="home"
+    onclick="showPage('home')">⌂<br>Home</button>
+
+  <button data-page="quran"
+    onclick="showPage('quran')">📖<br>Qur’an</button>
+
+  <button data-page="askai"
+    onclick="showPage('askai')">🤖<br>Ask AI</button>
+
+  <button data-page="more"
+    onclick="showPage('more')">✨<br>MORE</button>
+
 </nav>
 
 <script>
 const $ = id => document.getElementById(id);
 
+/* PAGE NAVIGATION */
 function showPage(id) {
   document.querySelectorAll('.page').forEach(p => {
     p.classList.toggle('hidden', p.id !== id);
   });
 
+  const navPage = ['asma','haddad'].includes(id) ? 'more' : id;
+
   document.querySelectorAll('.nav button').forEach(b => {
-    b.classList.toggle('active', b.dataset.page === id);
+    b.classList.toggle('active', b.dataset.page === navPage);
   });
 
   if (id === 'bookmarks') renderBookmarks();
@@ -384,10 +475,12 @@ function showPage(id) {
   window.scrollTo({top:0, behavior:'smooth'});
 }
 
+/* OPEN OTHER HTML TOOLS */
 function openTool(file) {
   window.location.href = './' + file;
 }
 
+/* QURAN SELECTOR */
 $('browse').addEventListener('change', fillOptions);
 fillOptions();
 
@@ -406,6 +499,7 @@ function fillOptions() {
 
 let loaded = [];
 
+/* AUDIO URLS */
 function audioUrl(surah, ayah) {
   const s = String(surah).padStart(3,'0');
   const a = String(ayah).padStart(3,'0');
@@ -428,6 +522,7 @@ $('reciter').addEventListener('change', () => {
     : 'When an ayah ends, the next ayah starts automatically when supported.';
 });
 
+/* LOAD QURAN */
 async function loadPassage() {
   const type = $('browse').value;
   const number = Number($('item').value);
@@ -445,7 +540,9 @@ async function loadPassage() {
     if (!response.ok) throw new Error('Qur’an service unavailable');
 
     const json = await response.json();
-    if (json.code !== 200 || !json.data) throw new Error('No Qur’an text returned');
+    if (json.code !== 200 || !json.data) {
+      throw new Error('No Qur’an text returned');
+    }
 
     if (type === 'surah') {
       const data = json.data;
@@ -467,18 +564,23 @@ async function loadPassage() {
     if (!loaded.length) throw new Error('No verses found');
 
     renderVerses();
+
     $('qstatus').textContent =
       `${type === 'juz' ? 'Juz' : 'Surah'} ${number} loaded • ${loaded.length} ayat.`;
+
   } catch (error) {
     $('qstatus').textContent =
       'Could not load content. Check internet and try again.';
+
     $('verses').innerHTML =
       '<p class="note">Please check your connection and try again.</p>';
+
   } finally {
     $('load').disabled = false;
   }
 }
 
+/* DISPLAY AYAT */
 function renderVerses() {
   $('verses').innerHTML = '';
 
@@ -496,6 +598,7 @@ function renderVerses() {
 
     const global = document.createElement('span');
     global.textContent = '#' + ayah.number;
+
     head.append(label, global);
 
     const arabic = document.createElement('div');
@@ -541,6 +644,7 @@ function renderVerses() {
 
 $('load').addEventListener('click', loadPassage);
 
+/* BOOKMARKS */
 function getBookmarks() {
   try {
     return JSON.parse(localStorage.getItem('noorBookmarks') || '[]');
@@ -584,7 +688,8 @@ function renderBookmarks() {
 
     const heading = document.createElement('div');
     heading.className = 'vhead';
-    heading.textContent = item.surahName + ' • Ayah ' + item.numberInSurah;
+    heading.textContent =
+      item.surahName + ' • Ayah ' + item.numberInSurah;
 
     const arabic = document.createElement('div');
     arabic.className = 'arabic';
@@ -594,6 +699,7 @@ function renderBookmarks() {
 
     const open = document.createElement('button');
     open.textContent = 'Open this Surah in Qur’an';
+
     open.onclick = () => {
       showPage('quran');
       $('browse').value = 'surah';
@@ -605,6 +711,7 @@ function renderBookmarks() {
     const remove = document.createElement('button');
     remove.textContent = 'Remove bookmark';
     remove.style.marginTop = '7px';
+
     remove.onclick = () => {
       const updated = getBookmarks().filter(x => x.number !== item.number);
       localStorage.setItem('noorBookmarks', JSON.stringify(updated));
@@ -616,6 +723,7 @@ function renderBookmarks() {
   });
 }
 
+/* ASK CHATGPT */
 function askChatGPT() {
   const question = $('aiQuestion').value.trim() ||
     'Help me study the Qur’an and use the NOOR app.';
@@ -627,7 +735,7 @@ function askChatGPT() {
   );
 }
 
-/* MAJLISUNNOOR — uploaded image filenames */
+/* MAJLISUNNOOR IMAGES */
 const MAJLIS_IMAGES = [
   "Screenshot_20261029_213525.jpg",
   "Screenshot_20261029_213542.jpg",
@@ -683,6 +791,20 @@ function nextMajlisPage() {
     showMajlisPage();
   }
 }
+
+/* SERVICE WORKER - PWA */
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('./service-worker.js')
+      .then(registration => {
+        console.log('NOOR Service Worker registered:', registration.scope);
+      })
+      .catch(error => {
+        console.error('Service Worker registration failed:', error);
+      });
+  });
+}
 </script>
+
 </body>
 </html>
