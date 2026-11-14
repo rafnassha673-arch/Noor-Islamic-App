@@ -55,21 +55,17 @@ h1 {
 }
 
 .container {
-  max-width:900px;
+  max-width:850px;
   margin:auto;
-  padding:14px 12px 25px;
-}
-
-button,a {
-  font:inherit;
+  padding:14px 12px 30px;
 }
 
 button {
+  font:inherit;
   cursor:pointer;
 }
 
 .back {
-  display:block;
   width:100%;
   padding:12px;
   margin-bottom:12px;
@@ -80,65 +76,68 @@ button {
   font-weight:700;
 }
 
-.info {
+.toolbar {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:8px;
+  flex-wrap:wrap;
   background:var(--panel);
   border:1px solid var(--line);
   border-radius:12px;
-  padding:12px;
-  margin-bottom:12px;
-  font-size:12px;
-  color:var(--muted);
-  line-height:1.7;
-  text-align:center;
+  padding:10px;
+  margin-bottom:10px;
 }
 
-.actions {
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:9px;
-  margin-bottom:12px;
-}
-
-.action {
-  padding:11px 7px;
-  background:#151515;
+.toolbar button {
+  background:#0b0b0b;
   color:var(--gold);
   border:1px solid #5c4b29;
-  border-radius:10px;
-  font-weight:650;
+  border-radius:9px;
+  padding:9px 12px;
+  font-weight:700;
+}
+
+.toolbar button:disabled {
+  opacity:.35;
+  cursor:not-allowed;
+}
+
+.page-info {
+  color:var(--cream);
   font-size:13px;
-  text-decoration:none;
+  font-weight:650;
   text-align:center;
 }
 
 .viewer {
-  width:100%;
-  height:calc(100vh - 260px);
-  min-height:480px;
-  background:#222;
+  background:#252525;
   border:1px solid var(--line);
   border-radius:12px;
-  overflow:hidden;
-}
-
-.viewer iframe {
-  display:block;
-  width:100%;
-  height:100%;
-  border:0;
-  background:#fff;
-}
-
-.fallback {
+  min-height:450px;
+  padding:8px;
+  overflow:auto;
   text-align:center;
-  padding:16px 10px;
-  color:var(--muted);
-  font-size:12px;
-  line-height:1.7;
 }
 
-.fallback a {
-  color:var(--gold);
+#pdfCanvas {
+  display:block;
+  margin:0 auto;
+  max-width:100%;
+  height:auto;
+  background:white;
+  box-shadow:0 3px 18px #0008;
+}
+
+.status {
+  color:var(--muted);
+  text-align:center;
+  font-size:13px;
+  padding:18px 8px;
+}
+
+.error {
+  color:#ff9999;
 }
 
 .footer {
@@ -146,13 +145,6 @@ button {
   color:#777;
   font-size:11px;
   padding:20px 10px;
-}
-
-@media(max-width:400px) {
-  .viewer {
-    height:calc(100vh - 270px);
-    min-height:420px;
-  }
 }
 </style>
 </head>
@@ -171,47 +163,37 @@ button {
     ← Back to MORE
   </button>
 
-  <div class="info">
-    Original Haddad Rathib PDF<br>
-    12 Pages · Original Arabic Text
+  <div class="toolbar">
+    <button id="prevBtn" onclick="changePage(-1)" disabled>
+      ← Previous
+    </button>
+
+    <span class="page-info" id="pageInfo">
+      Loading PDF...
+    </span>
+
+    <button id="nextBtn" onclick="changePage(1)" disabled>
+      Next →
+    </button>
   </div>
 
-  <div class="actions">
-
-    <a
-      class="action"
-      href="./haddad-rathib.pdf"
-      target="_blank"
-      rel="noopener"
-    >
-      ↗ Open PDF
-    </a>
-
-    <a
-      class="action"
-      href="./haddad-rathib.pdf"
-      download="haddad-rathib.pdf"
-    >
-      ↓ Download PDF
-    </a>
-
+  <div class="toolbar">
+    <button onclick="zoomOut()">− Zoom</button>
+    <span class="page-info" id="zoomInfo">100%</span>
+    <button onclick="zoomIn()">+ Zoom</button>
   </div>
 
   <div class="viewer">
+    <div class="status" id="status">
+      Loading Haddad Rathib...
+    </div>
 
-    <iframe
-      src="./haddad-rathib.pdf#toolbar=1&navpanes=0&view=FitH"
-      title="Haddad Rathib Original PDF"
-      loading="eager"
-    ></iframe>
-
+    <canvas id="pdfCanvas"></canvas>
   </div>
 
-  <div class="fallback">
-    PDF കാണാൻ കഴിയുന്നില്ലെങ്കിൽ
-    <a href="./haddad-rathib.pdf" target="_blank" rel="noopener">
-      ഇവിടെ അമർത്തി PDF തുറക്കുക
-    </a>.
+  <div class="toolbar">
+    <button onclick="goFirst()">First Page</button>
+    <button onclick="goLast()">Last Page</button>
   </div>
 
   <div class="footer">
@@ -220,7 +202,154 @@ button {
 
 </main>
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+
 <script>
+const PDF_URL = "./haddad-rathib.pdf";
+
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js";
+
+let pdfDoc = null;
+let currentPage = 1;
+let zoom = 1;
+let renderTask = null;
+
+const canvas = document.getElementById("pdfCanvas");
+const ctx = canvas.getContext("2d");
+
+const statusBox = document.getElementById("status");
+const pageInfo = document.getElementById("pageInfo");
+const zoomInfo = document.getElementById("zoomInfo");
+
+async function loadPDF() {
+  try {
+    const loadingTask = pdfjsLib.getDocument(PDF_URL);
+
+    pdfDoc = await loadingTask.promise;
+
+    statusBox.style.display = "none";
+
+    currentPage = 1;
+    zoom = 1;
+
+    await renderPage();
+
+  } catch(error) {
+    console.error(error);
+
+    statusBox.style.display = "block";
+    statusBox.className = "status error";
+    statusBox.textContent =
+      "Unable to load PDF. Please check your internet connection and PDF file.";
+  }
+}
+
+async function renderPage() {
+  if (!pdfDoc) return;
+
+  if (renderTask) {
+    try {
+      renderTask.cancel();
+    } catch(e) {}
+  }
+
+  try {
+    const page = await pdfDoc.getPage(currentPage);
+
+    const viewer = document.querySelector(".viewer");
+
+    const baseViewport = page.getViewport({scale:1});
+
+    const availableWidth = Math.max(
+      250,
+      viewer.clientWidth - 18
+    );
+
+    const fitScale = availableWidth / baseViewport.width;
+
+    const scale = fitScale * zoom;
+
+    const viewport = page.getViewport({scale});
+
+    const pixelRatio = Math.min(
+      window.devicePixelRatio || 1,
+      2
+    );
+
+    canvas.width = Math.floor(viewport.width * pixelRatio);
+    canvas.height = Math.floor(viewport.height * pixelRatio);
+
+    canvas.style.width = viewport.width + "px";
+    canvas.style.height = viewport.height + "px";
+
+    const transform = pixelRatio !== 1
+      ? [pixelRatio,0,0,pixelRatio,0,0]
+      : null;
+
+    renderTask = page.render({
+      canvasContext:ctx,
+      viewport:viewport,
+      transform:transform
+    });
+
+    await renderTask.promise;
+
+    pageInfo.textContent =
+      "Page " + currentPage + " / " + pdfDoc.numPages;
+
+    zoomInfo.textContent =
+      Math.round(zoom * 100) + "%";
+
+    document.getElementById("prevBtn").disabled =
+      currentPage <= 1;
+
+    document.getElementById("nextBtn").disabled =
+      currentPage >= pdfDoc.numPages;
+
+    document.querySelectorAll(".toolbar")[0]
+      .scrollIntoView({block:"nearest",behavior:"smooth"});
+
+  } catch(error) {
+    if (error.name !== "RenderingCancelledException") {
+      console.error(error);
+    }
+  }
+}
+
+function changePage(amount) {
+  if (!pdfDoc) return;
+
+  const next = currentPage + amount;
+
+  if (next < 1 || next > pdfDoc.numPages) return;
+
+  currentPage = next;
+  renderPage();
+}
+
+function zoomIn() {
+  zoom = Math.min(2.5,zoom + 0.15);
+  renderPage();
+}
+
+function zoomOut() {
+  zoom = Math.max(0.65,zoom - 0.15);
+  renderPage();
+}
+
+function goFirst() {
+  currentPage = 1;
+  renderPage();
+}
+
+function goLast() {
+  if (!pdfDoc) return;
+
+  currentPage = pdfDoc.numPages;
+  renderPage();
+}
+
 function goBack() {
   if (
     document.referrer &&
@@ -231,6 +360,12 @@ function goBack() {
     location.href = "./index.html";
   }
 }
+
+window.addEventListener("resize",() => {
+  if (pdfDoc) renderPage();
+});
+
+loadPDF();
 </script>
 
 </body>
