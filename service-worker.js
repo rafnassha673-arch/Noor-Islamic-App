@@ -1,5 +1,5 @@
 
-const CACHE_NAME = "noor-islamic-app-v8";
+const CACHE_NAME = "noor-islamic-app-v9";
 
 // PDF.js CDN files
 const PDFJS_FILES = [
@@ -12,6 +12,10 @@ const APP_FILES = [
   "./index.html",
   "./manifest.json",
   "./service-worker.js",
+
+  // NEW NOOR ICONS
+  "./noor-icon-192.png",
+  "./noor-icon-512.png",
 
   // Main pages
   "./quran-reading.html",
@@ -111,7 +115,7 @@ self.addEventListener("fetch", (event) => {
   const isSameOrigin = url.origin === self.location.origin;
   const isPdfJs = PDFJS_FILES.includes(url.href);
 
-  // Handle only app files and the specified PDF.js CDN files
+  // Handle only app files and specified PDF.js CDN files
   if (!isSameOrigin && !isPdfJs) return;
 
   event.respondWith(
