@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -184,6 +183,95 @@ let fontSize = 28;
 let surahList = [];
 let requestNumber = 0;
 
+/* =========================================
+   SCREEN WAKE LOCK
+========================================= */
+
+let wakeLock = null;
+let wakeLockRequest = null;
+
+async function requestScreenWakeLock() {
+  if (!('wakeLock' in navigator)) {
+    console.log('Screen Wake Lock is not supported.');
+    return;
+  }
+
+  if (document.visibilityState !== 'visible') {
+    return;
+  }
+
+  if (wakeLock && !wakeLock.released) {
+    return;
+  }
+
+  if (wakeLockRequest) {
+    return wakeLockRequest;
+  }
+
+  wakeLockRequest = (async () => {
+    try {
+      const sentinel = await navigator.wakeLock.request('screen');
+
+      if (document.visibilityState !== 'visible') {
+        await sentinel.release();
+        return;
+      }
+
+      wakeLock = sentinel;
+
+      console.log('NOOR Screen Wake Lock activated.');
+
+      sentinel.addEventListener('release', () => {
+        if (wakeLock === sentinel) {
+          wakeLock = null;
+        }
+
+        console.log('NOOR Screen Wake Lock released.');
+      });
+
+    } catch (error) {
+      console.log('Wake Lock error:', error);
+    } finally {
+      wakeLockRequest = null;
+    }
+  })();
+
+  return wakeLockRequest;
+}
+
+async function releaseScreenWakeLock() {
+  const currentWakeLock = wakeLock;
+
+  wakeLock = null;
+
+  if (!currentWakeLock) return;
+
+  try {
+    await currentWakeLock.release();
+  } catch (error) {
+    console.log('Wake Lock release error:', error);
+  }
+}
+
+/* Re-activate when page becomes visible */
+document.addEventListener('visibilitychange', () => {
+  if (document.visibilityState === 'visible') {
+    requestScreenWakeLock();
+  } else {
+    releaseScreenWakeLock();
+  }
+});
+
+/* Request Wake Lock when page loads */
+window.addEventListener('load', requestScreenWakeLock);
+
+/* Request again when returning to the page */
+window.addEventListener('pageshow', requestScreenWakeLock);
+
+/* =========================================
+   FONT SIZE CONTROLS
+========================================= */
+
 document.getElementById('smaller').addEventListener('click', () => {
   fontSize = Math.max(18, fontSize - 2);
   area.style.fontSize = fontSize + 'px';
@@ -193,6 +281,10 @@ document.getElementById('larger').addEventListener('click', () => {
   fontSize = Math.min(48, fontSize + 2);
   area.style.fontSize = fontSize + 'px';
 });
+
+/* =========================================
+   QURAN DATA
+========================================= */
 
 async function getJson(url) {
   const response = await fetch(url, {
@@ -212,8 +304,13 @@ async function getJson(url) {
   return json.data;
 }
 
+/* =========================================
+   LOAD SURAH LIST
+========================================= */
+
 async function loadSurahList() {
   picker.disabled = true;
+
   statusBox.textContent =
     '114 സൂറത്തുകളുടെ പട്ടിക പരിശോധിക്കുന്നു...';
 
@@ -242,11 +339,14 @@ async function loadSurahList() {
 
     data.forEach(surah => {
       const option = document.createElement('option');
+
       option.value = String(surah.number);
+
       option.textContent =
         surah.number + '. ' +
         surah.englishName + ' — ' +
         surah.name;
+
       picker.appendChild(option);
     });
 
@@ -259,13 +359,19 @@ async function loadSurahList() {
     picker.disabled = true;
     title.textContent = '';
     area.replaceChildren();
+
     statusBox.textContent =
       'സൂറത്തുകളുടെ പട്ടിക ലഭിച്ചില്ല. Internet പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കൂ.';
   }
 }
 
+/* =========================================
+   LOAD SELECTED SURAH
+========================================= */
+
 async function loadSurah() {
   const number = Number(picker.value);
+
   const selected = surahList.find(
     surah => surah.number === number
   );
@@ -320,10 +426,12 @@ async function loadSurah() {
 
       const numberLabel = document.createElement('span');
       numberLabel.className = 'ayahNo';
+
       numberLabel.textContent =
         '۞ ' + ayah.numberInSurah;
 
       item.append(text, numberLabel);
+
       fragment.appendChild(item);
     });
 
@@ -346,6 +454,7 @@ async function loadSurah() {
 
     statusBox.textContent =
       'ആയത്തുകൾ പൂർണമായി ലഭിച്ചില്ല; അതിനാൽ പ്രദർശിപ്പിച്ചിട്ടില്ല. Internet പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കൂ.';
+
   } finally {
     if (thisRequest === requestNumber) {
       picker.disabled = false;
@@ -353,9 +462,16 @@ async function loadSurah() {
   }
 }
 
+/* =========================================
+   SURAH SELECTOR
+========================================= */
+
 picker.addEventListener('change', loadSurah);
 
-/* Read the theme saved by NOOR Settings */
+/* =========================================
+   NOOR THEME SYSTEM
+========================================= */
+
 (function applyNoorTheme() {
   let theme = 'light';
 
@@ -369,7 +485,12 @@ picker.addEventListener('change', loadSurah);
   );
 })();
 
+/* =========================================
+   INITIALIZE
+========================================= */
+
 loadSurahList();
+
 </script>
 
 </body>
