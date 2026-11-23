@@ -1,4 +1,3 @@
-
 <!doctype html>
 <html lang="en">
 <head>
@@ -31,6 +30,7 @@ body {
   min-height:100vh;
   overflow-y:auto;
   overflow-x:hidden;
+  -webkit-overflow-scrolling:touch;
   background:radial-gradient(ellipse at top,#211b0d 0,#080808 48%);
   color:var(--cream);
   font-family:system-ui,-apple-system,Segoe UI,sans-serif;
@@ -439,6 +439,46 @@ textarea {
 
 <script>
 const $ = id => document.getElementById(id);
+
+/* ==========================================
+   NOOR - KEEP SCREEN AWAKE
+   ========================================== */
+
+let noorWakeLock = null;
+
+async function enableNoorWakeLock() {
+  if (!("wakeLock" in navigator)) {
+    console.log("Screen Wake Lock is not supported.");
+    return;
+  }
+
+  if (document.visibilityState !== "visible") return;
+
+  try {
+    if (noorWakeLock && !noorWakeLock.released) return;
+
+    noorWakeLock = await navigator.wakeLock.request("screen");
+
+    console.log("NOOR Screen Wake Lock activated.");
+
+    noorWakeLock.addEventListener("release", () => {
+      console.log("NOOR Screen Wake Lock released.");
+    });
+
+  } catch (error) {
+    console.log("Could not activate Screen Wake Lock:", error);
+  }
+}
+
+/* Activate when app opens */
+enableNoorWakeLock();
+
+/* Reactivate when app returns to foreground */
+document.addEventListener("visibilitychange", () => {
+  if (document.visibilityState === "visible") {
+    enableNoorWakeLock();
+  }
+});
 
 /* PAGE NAVIGATION */
 function showPage(id) {
